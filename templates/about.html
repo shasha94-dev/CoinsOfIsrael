@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אודות ותודות</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&family=Heebo:wght@400;700;900&display=swap');
+
+        :root { --primary: #0038b8; --bg: #f4f4f9; --text: #333; }
+        body { 
+            font-family: 'Heebo', 'Assistant', sans-serif; 
+            background: var(--bg); color: var(--text); 
+            margin: 0; padding: 20px; text-align: right; 
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        h1 { 
+            color: var(--primary); 
+            text-align: center; 
+            font-size: 2.5em; 
+            margin-bottom: 40px; 
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .section { margin-bottom: 30px; }
+        
+        .section-header {
+            font-size: 1.5em;
+            color: #444;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .section-content {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* Styling for links coming from JSON */
+        .section-content a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .section-content a:hover {
+            text-decoration: underline;
+        }
+
+        .back-btn-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,56,184,0.3);
+        }
+        .back-btn:hover {
+            background: #002a8a;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>{{ data.title }}</h1>
+
+        {% if data.sections %}
+            {% for section in data.sections %}
+            <div class="section">
+                {% if section.header %}
+                    <div class="section-header">{{ section.header }}</div>
+                {% endif %}
+                <div class="section-content">{{ section.text | safe }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>לא נמצא תוכן.</p>
+        {% endif %}
+
+        <div class="back-btn-container">
+            <a href="/" class="back-btn">חזרה לארכיון</a>
+        </div>
+    </div>
+
+</body>
+</html>

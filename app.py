@@ -125,6 +125,10 @@ def about():
     data = get_json_data(os.path.join(IMAGE_FOLDER, 'about.json'))
     return render_template('about.html', data=data)
 
+@app.route('/accessibility')
+def accessibility():
+    return render_template('accessibility.html')
+    
 @app.route('/api/data')
 def get_data():
     coins = scan_collection()

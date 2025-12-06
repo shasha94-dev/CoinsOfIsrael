@@ -307,10 +307,17 @@
         });
     }
 
-    function createCardHtml(coin, mode) {
-        let imgHtml = (coin.has_image && coin.images.length > 0)
-            ? `<img src="/images/${coin.images[0]}" loading="lazy">` 
-            : `<div class="no-image">?</div>`;
+function createCardHtml(coin, mode) {
+        let imgHtml;
+        
+        if (coin.has_image && coin.images.length > 0) {
+            // Check if backend confirmed a thumbnail exists
+            const folder = coin.thumb_available ? 'thumbnails' : 'images';
+            // Use thumb_src (which is the relative path)
+            imgHtml = `<img src="/${folder}/${coin.thumb_src}" loading="lazy" alt="${coin.name}">`;
+        } else {
+            imgHtml = `<div class="no-image">?</div>`;
+        }
 
         const coinDataStr = encodeURIComponent(JSON.stringify(coin));
         

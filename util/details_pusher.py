@@ -47,7 +47,70 @@ def add_json_data(data: dict, folder1_name: str, folder2_name_part: list, folder
             json.dump(existing, f, indent=4, ensure_ascii=False)
         count += 1
     print("updated",count,"files")
-    
+ 
+
+
+
+noop_add_json_data(	
+    data={"משקל": "1.3 גרם","קוטר": "21 מ\"מ","חומר":  "סגסוגת של 97% אלומיניום, 3% מגנזיום"},
+    folder1_name="images/לירה",
+    folder2_name_part=[str(i) for i in range(1960,1981)],
+    folder3_name_part="אגורה"
+)   
+noop_add_json_data(	
+    data={"משקל": "2.3 גרם","קוטר": "17.5 מ\"מ","חומר":  "סגסוגת של 92% נחושת, 6% אלומיניום, 2% ניקל"},
+    folder1_name="images/לירה",
+    folder2_name_part=[str(i) for i in range(1960,1976)],
+    folder3_name_part="5 אגורות"
+)   
+
+noop_add_json_data(	
+    data={"משקל": "0.75 גרם","קוטר": "17.5 מ\"מ","חומר":  "סגסוגת של 97% אלומיניום, 3% מגנזיום"},
+    folder1_name="images/לירה",
+    folder2_name_part=[str(i) for i in range(1976,1981)],
+    folder3_name_part="5 אגורות"
+)   
+noop_add_json_data(	
+    data={"משקל": "5 גרם","קוטר": "21.5 מ\"מ","חומר":  "סגסוגת של 92% נחושת, 6% אלומיניום, 2% ניקל"},
+    folder1_name="images/לירה",
+    folder2_name_part=[str(i) for i in range(1960,1977)],
+    folder3_name_part="10 אגורות"
+)   
+noop_add_json_data(	
+    data={"משקל": "1.6 גרם","קוטר": "21.5 מ\"מ","חומר":  "סגסוגת של 97% אלומיניום, 3% מגנזיום"},
+    folder1_name="images/לירה",
+    folder2_name_part=[str(i) for i in range(1978,1981)],
+    folder3_name_part="10 אגורות"
+)   
+
+noop_add_json_data(	
+    data={"משקל": "6.5 גרם","קוטר": "25.5 מ\"מ","חומר":  "סגסוגת של 92% נחושת, 6% אלומיניום, 2% ניקל"},
+    folder1_name="images/לירה",
+    folder2_name_part=[str(i) for i in range(1960,1981)],
+    folder3_name_part="25 אגורות"
+)   
+noop_add_json_data(	
+    data={"משקל": "6.8 גרם","קוטר": "24.5 מ\"מ","חומר":  "סגסוגת של 75% נחושת ו-25% ניקל"},
+    folder1_name="images/לירה",
+    folder2_name_part=[str(i) for i in range(1960,1981)],
+    folder3_name_part="חצי לירה"
+)  
+
+noop_add_json_data(	
+    data={"משקל": "9 גרם","קוטר": "27.5 מ\"מ","חומר":  "סגסוגת של 75% נחושת ו-25% ניקל"},
+    folder1_name="images/לירה",
+    folder2_name_part=[str(i) for i in range(1960,1981)],
+    folder3_name_part="לירה"
+)  
+
+
+noop_add_json_data(	
+    data={"משקל": "11.2 גרם","קוטר": "30 מ\"מ","חומר":  "סגסוגת של 75% נחושת ו-25% ניקל"},
+    folder1_name="images/לירה",
+    folder2_name_part=[str(i) for i in range(1960,1981)],
+    folder3_name_part="5 לירות"
+)  
+
 
 noop_add_json_data(	
     data={"משקל": "0.6 גרם","קוטר": "15 מ\"מ","חומר": "סגסוגת של 97% אלומיניום, 3% מגנזיום"},

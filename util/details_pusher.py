@@ -48,7 +48,81 @@ def add_json_data(data: dict, folder1_name: str, folder2_name_part: list, folder
         count += 1
     print("updated",count,"files")
     
-add_json_data(	
+
+noop_add_json_data(	
+    data={"משקל": "0.6 גרם","קוטר": "15 מ\"מ","חומר": "סגסוגת של 97% אלומיניום, 3% מגנזיום"},
+    folder1_name="images/שקל",
+    folder2_name_part=[str(i) for i in range(1980,1986)],
+    folder3_name_part="אגורה חדשה"
+)  
+
+noop_add_json_data(	
+    data={"משקל": "0.9 גרם","קוטר": "18.5 מ\"מ", "חומר": "סגסוגת של 97% אלומיניום, 3% מגנזיום"},
+    folder1_name="images/שקל",
+    folder2_name_part=[str(i) for i in range(1980,1986)],
+    folder3_name_part="5 אגורות חדשות"
+)  
+
+
+noop_add_json_data(	
+    data={"משקל": "2.1 גרם","קוטר": "16 מ\"מ", "חומר": "סגסוגת של 92% נחושת, 8% ניקל."},
+    folder1_name="images/שקל",
+    folder2_name_part=[str(i) for i in range(1980,1986)],
+    folder3_name_part="10 אגורות חדשות"
+)  
+
+noop_add_json_data(	
+    data={"משקל": "3 גרם","קוטר": "20 מ\"מ", "חומר": "סגסוגת של 75% נחושת ו-25% ניקל."},
+    folder1_name="images/שקל",
+    folder2_name_part=[str(i) for i in range(1980,1986)],
+    folder3_name_part="חצי שקל"
+)  
+
+noop_add_json_data(	
+    data={"משקל": "5 גרם","קוטר": "23 מ\"מ", "חומר": "סגסוגת של 75% נחושת ו-25% ניקל."},
+    folder1_name="images/שקל",
+    folder2_name_part=[str(i) for i in range(1980,1986)],
+    folder3_name_part="שקל"
+)  
+noop_add_json_data(	
+    data={"משקל": "6.1 גרם","קוטר": "24 מ\"מ", "חומר": "סגסוגת של 92% נחושת, 6% אלומיניום, 2% ניקל."},
+    folder1_name="images/שקל",
+    folder2_name_part=[str(i) for i in range(1980,1986)],
+    folder3_name_part="5 שקלים"
+)  
+    
+noop_add_json_data(	
+    data={"משקל": "8 גרם","קוטר": "26 מ\"מ", "חומר": "סגסוגת של 75% נחושת ו-25% ניקל."},
+    folder1_name="images/שקל",
+    folder2_name_part=[str(i) for i in range(1980,1986)],
+    folder3_name_part="10 שקלים"
+)  
+
+noop_add_json_data(	
+    data={"משקל": "9 גרם","קוטר": "28 מ\"מ", "חומר": "סגסוגת של 92% נחושת, 6% אלומיניום, 2% ניקל."},
+    folder1_name="images/שקל",
+    folder2_name_part=[str(i) for i in range(1980,1986)],
+    folder3_name_part="50 שקלים"
+)  
+
+noop_add_json_data(	
+    data={"משקל": "10.8 גרם","קוטר": "29 מ\"מ", "חומר": "סגסוגת של 75% נחושת ו-25% ניקל."},
+    folder1_name="images/שקל",
+    folder2_name_part=[str(i) for i in range(1980,1986)],
+    folder3_name_part="100 שקלים"
+)  
+
+
+noop_add_json_data(	
+    data={"משקל": "3.5 גרם","קוטר": "18 מ\"מ", "חומר": "פלדה מצופה ניקל."},
+    folder1_name="images/שקל חדש",
+    folder2_name_part=[str(i) for i in range(1994,2025)],
+    folder3_name_part="שקל"
+)  
+
+
+
+noop_add_json_data(	
     data={"משקל": "4 גרם","קוטר": "18 מ\"מ", "חומר": "סגסוגת של 75% נחושת ו-25% ניקל."},
     folder1_name="images/שקל חדש",
     folder2_name_part=[str(i) for i in range(1980,1994)],
@@ -56,7 +130,7 @@ add_json_data(
 )  
 
 
-add_json_data(	
+noop_add_json_data(	
     data={"משקל": "3.5 גרם","קוטר": "18 מ\"מ", "חומר": "פלדה מצופה ניקל."},
     folder1_name="images/שקל חדש",
     folder2_name_part=[str(i) for i in range(1994,2025)],

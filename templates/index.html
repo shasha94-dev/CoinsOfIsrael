@@ -23,7 +23,6 @@
         .group-header { border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 30px; }
         .group-title { font-size: 2.5em; color: #444; margin: 0; font-weight: 900; }
         
-        /* SERIES HEADLINE */
         .series-headline {
             background: linear-gradient(90deg, var(--primary) 0%, #0055ff 100%);
             color: white;
@@ -35,7 +34,6 @@
             box-shadow: 0 4px 15px rgba(0,56,184,0.2);
         }
 
-        /* ROW WRAPPER */
         .coin-type-row {
             margin-bottom: 30px; 
             padding-bottom: 20px;
@@ -80,17 +78,14 @@
 <body>
 
 <header>
-
     <h1>ארכיון המטבעות הישראלי</h1>
     <div class="controls">
         <button id="btn-year" class="active" onclick="setView('year')">לפי שנה</button>
         <button id="btn-coin" onclick="setView('coin')">לפי סוג</button>
-        
         <a href="/about" style="text-decoration:none;">
             <button>אודות ותודות</button>
         </a>
     </div>
-
 </header>
 
 <div id="gallery">טוען נתונים...</div>
@@ -181,9 +176,7 @@
 
         keys.forEach(key => {
             
-            // =========================
-            //      YEAR VIEW LOGIC
-            // =========================
+            // YEAR VIEW
             if (mode === 'year') {
                 const section = document.createElement('div');
                 section.className = 'group-section';
@@ -204,14 +197,12 @@
                     seriesDiv.innerHTML = `<div class="series-headline">${seriesName}</div>`;
                     section.appendChild(seriesDiv);
 
-                    // Group by Coin Type Name
                     const byCoinType = bySeries[seriesName].reduce((acc, coin) => {
                         acc[coin.name] = acc[coin.name] || [];
                         acc[coin.name].push(coin);
                         return acc;
                     }, {});
 
-                    // Sort Coin Types based on JSON order
                     const coinTypeKeys = Object.keys(byCoinType).sort((nA, nB) => {
                         const rankA = getCoinRank(seriesName, nA);
                         const rankB = getCoinRank(seriesName, nB);
@@ -221,20 +212,12 @@
                         return getNumericValue(nA) - getNumericValue(nB);
                     });
 
-                    // --- SMART ROW GROUPING ---
-                    // Strategy: 
-                    // 1. If a coin type has multiple subtypes -> Render in its own row.
-                    // 2. If a coin type has only 1 type -> Add to buffer.
-                    // 3. Flush buffer when a complex coin appears or at the end.
-                    
                     let simpleCoinsBuffer = [];
 
                     coinTypeKeys.forEach(cType => {
                         const coinsOfType = byCoinType[cType];
 
-                        // Is this a complex coin? (More than 1 item)
                         if (coinsOfType.length > 1) {
-                            // A. FLUSH BUFFER FIRST (The simple coins before this one)
                             if (simpleCoinsBuffer.length > 0) {
                                 const bufferRow = document.createElement('div');
                                 bufferRow.className = 'coin-type-row'; 
@@ -243,10 +226,9 @@
                                 html += `</div>`;
                                 bufferRow.innerHTML = html;
                                 section.appendChild(bufferRow);
-                                simpleCoinsBuffer = []; // Clear
+                                simpleCoinsBuffer = [];
                             }
 
-                            // B. RENDER COMPLEX COIN (On its own row)
                             const complexRow = document.createElement('div');
                             complexRow.className = 'coin-type-row';
                             let html = `<div class="coin-grid">`;
@@ -256,13 +238,10 @@
                             section.appendChild(complexRow);
 
                         } else {
-                            // C. ADD TO BUFFER (Simple coin, single type)
-                            // Push the single coin object
                             simpleCoinsBuffer.push(coinsOfType[0]);
                         }
                     });
 
-                    // D. FLUSH REMAINING BUFFER (At end of series)
                     if (simpleCoinsBuffer.length > 0) {
                         const finalRow = document.createElement('div');
                         finalRow.className = 'coin-type-row';
@@ -276,9 +255,7 @@
                 
                 gallery.appendChild(section);
             
-            // =========================
-            //      COIN VIEW LOGIC
-            // =========================
+            // COIN VIEW
             } else {
                 const currentSeries = grouped[key][0].series;
                 
@@ -307,13 +284,10 @@
         });
     }
 
-function createCardHtml(coin, mode) {
+    function createCardHtml(coin, mode) {
         let imgHtml;
-        
         if (coin.has_image && coin.images.length > 0) {
-            // Check if backend confirmed a thumbnail exists
             const folder = coin.thumb_available ? 'thumbnails' : 'images';
-            // Use thumb_src (which is the relative path)
             imgHtml = `<img src="/${folder}/${coin.thumb_src}" loading="lazy" alt="${coin.name}">`;
         } else {
             imgHtml = `<div class="no-image">?</div>`;
@@ -411,9 +385,17 @@ function createCardHtml(coin, mode) {
         if (galleryViewer) { galleryViewer.destroy(); galleryViewer = null; }
     }
     
+    // CLICK OUTSIDE TO CLOSE
     window.onclick = function(event) {
         if (event.target == document.getElementById('coinModal')) closeModal();
     }
+
+    // ESC KEY TO CLOSE
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            closeModal();
+        }
+    });
 </script>
 
 </body>

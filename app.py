@@ -5,6 +5,7 @@ from flask import Flask, render_template, send_from_directory, jsonify
 app = Flask(__name__)
 
 IMAGE_FOLDER = 'images'
+THUMB_FOLDER = 'thumbnails' # New folder
 ALLOWED_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.gif', '.webp'}
 
 def is_image(filename):
@@ -56,12 +57,23 @@ def scan_collection():
                 # --- PART A: Root Images ---
                 if images_in_root:
                     subtype_label = "ללא תיוג" if subdirs else None
+                    
+                    # Original Full Paths
                     img_paths = [os.path.join(series_name, year, coin_name, img).replace("\\", "/") for img in images_in_root]
+                    
+                    # Determine Thumbnail Path (Check if exists, otherwise use original)
+                    primary_thumb = img_paths[0] # Default to original
+                    possible_thumb = os.path.join(THUMB_FOLDER, primary_thumb)
+                    # We pass a flag or the path prefix to frontend
+                    use_thumb = os.path.exists(possible_thumb)
 
                     collection.append({
                         'series': series_name, 'series_img': series_img, 'year': year,
                         'name': coin_name, 'subtype': subtype_label, 
-                        'images': img_paths, 'has_image': True, 'stats': coin_stats
+                        'images': img_paths, 
+                        'thumb_src': primary_thumb, # The relative path is the same
+                        'thumb_available': use_thumb, # Boolean to tell frontend where to look
+                        'has_image': True, 'stats': coin_stats
                     })
                 
                 # --- PART B: Subtypes ---
@@ -74,10 +86,18 @@ def scan_collection():
 
                     if subtype_imgs:
                         img_paths = [os.path.join(series_name, year, coin_name, subtype, img).replace("\\", "/") for img in subtype_imgs]
+                        
+                        primary_thumb = img_paths[0]
+                        possible_thumb = os.path.join(THUMB_FOLDER, primary_thumb)
+                        use_thumb = os.path.exists(possible_thumb)
+
                         collection.append({
                             'series': series_name, 'series_img': series_img, 'year': year,
                             'name': coin_name, 'subtype': subtype,
-                            'images': img_paths, 'has_image': True, 'stats': final_stats
+                            'images': img_paths, 
+                            'thumb_src': primary_thumb,
+                            'thumb_available': use_thumb,
+                            'has_image': True, 'stats': final_stats
                         })
                     else:
                         collection.append({
@@ -100,9 +120,13 @@ def scan_collection():
 def index():
     return render_template('index.html')
 
+@app.route('/about')
+def about():
+    data = get_json_data(os.path.join(IMAGE_FOLDER, 'about.json'))
+    return render_template('about.html', data=data)
+
 @app.route('/api/data')
 def get_data():
-    # Return both the coins and the sort order configuration
     coins = scan_collection()
     order_config = get_json_data(os.path.join(IMAGE_FOLDER, 'order.json'))
     return jsonify({'coins': coins, 'config': order_config})
@@ -110,17 +134,11 @@ def get_data():
 @app.route('/images/<path:filename>')
 def serve_image(filename):
     return send_from_directory(IMAGE_FOLDER, filename)
-    
 
-@app.route('/about')
-def about():
-    # Load the about.json file
-    data = get_json_data(os.path.join(IMAGE_FOLDER, 'about.json'))
-    return render_template('about.html', data=data)
-
+# NEW ROUTE FOR THUMBNAILS
+@app.route('/thumbnails/<path:filename>')
+def serve_thumbnail(filename):
+    return send_from_directory(THUMB_FOLDER, filename)
 
 if __name__ == '__main__':
-    app.run(
-        host="0.0.0.0",
-        port=int(os.environ.get("PORT", 8080))
-    )
+    app.run(debug=True, port=5000)

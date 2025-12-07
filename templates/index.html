@@ -133,20 +133,59 @@
         </div>
     </div>
 </div>
-
 <script>
     let allCoins = [];
     let sortConfig = { series_order: [], coin_order: {} };
     let galleryViewer = null;
-    let lastFocusedElement = null; // To restore focus after closing modal
+    let lastFocusedElement = null;
 
     fetch('/api/data')
         .then(res => res.json())
         .then(data => {
             allCoins = data.coins;
             sortConfig = data.config || { series_order: [], coin_order: {} };
+            
+            // 1. Load the view
             setView('year');
+            
+            // 2. DEEP LINKING: Check if URL has a hash (e.g. #1985_CoinName)
+            checkHashAndOpen();
         });
+
+    // --- DEEP LINKING HELPER FUNCTIONS ---
+    
+    // Generates a unique URL-friendly ID for a coin
+    function getCoinSlug(coin) {
+        // Create ID: Year_Name_Series
+        let slug = `${coin.year}_${coin.name}_${coin.series}`;
+        // Add subtype if exists
+        if (coin.subtype && coin.subtype !== 'ללא תיוג') {
+            slug += `_${coin.subtype}`;
+        }
+        // Replace spaces with dashes, remove parentheses for cleaner URLs
+        return slug.replace(/\s+/g, '-').replace(/[()]/g, '');
+    }
+
+    // Checks the URL hash and opens the modal if a match is found
+    function checkHashAndOpen() {
+        const hash = decodeURIComponent(window.location.hash.substring(1));
+        if (hash) {
+            const targetCoin = allCoins.find(c => getCoinSlug(c) === hash);
+            if (targetCoin) {
+                // Pass data as string just like the click handler does
+                const coinDataStr = encodeURIComponent(JSON.stringify(targetCoin));
+                openModal(coinDataStr, false); // false = don't update hash again
+            }
+        } else {
+            // If hash is empty, ensure modal is closed
+            closeModal(false);
+        }
+    }
+
+    // Listen to browser Back/Forward buttons
+    window.addEventListener('hashchange', checkHashAndOpen);
+
+    // --- EXISTING LOGIC ---
 
     function extractYear(str) {
         if (!str) return 9999;
@@ -180,7 +219,6 @@
     }
 
     function setView(mode) {
-        // Update ARIA states
         const btnYear = document.getElementById('btn-year');
         const btnCoin = document.getElementById('btn-coin');
         btnYear.className = mode === 'year' ? 'active' : '';
@@ -291,7 +329,6 @@
         rowDiv.innerHTML = html;
         container.appendChild(rowDiv);
         
-        // Add keyboard event listeners to new cards
         const cards = rowDiv.querySelectorAll('.coin-card');
         cards.forEach(card => {
             card.addEventListener('keydown', (e) => {
@@ -305,9 +342,14 @@
 
     function createCardHtml(coin, mode) {
         let imgHtml;
+        let altText = `מטבע ${coin.name}`;
+        if (coin.stats && coin.stats.alt) {
+            altText = coin.stats.alt;
+        }
+
         if (coin.has_image && coin.images.length > 0) {
             const folder = coin.thumb_available ? 'thumbnails' : 'images';
-            imgHtml = `<img src="/${folder}/${coin.thumb_src}" loading="lazy" alt="מטבע ${coin.name}">`;
+            imgHtml = `<img src="/${folder}/${coin.thumb_src}" loading="lazy" alt="${altText}" title="${altText}">`;
         } else {
             imgHtml = `<div class="no-image" aria-hidden="true">?</div>`;
         }
@@ -320,14 +362,10 @@
             badgeHtml = `<span class="${badgeClass}">${coin.subtype}</span>`;
         }
 
-        // ACCESSIBILITY CHANGES:
-        // 1. tabindex="0" makes it focusable via keyboard
-        // 2. role="button" tells screen readers it is clickable
-        // 3. aria-label gives context
         const ariaLabel = `${coin.name}, שנה ${coin.year}, ${coin.subtype ? 'סוג ' + coin.subtype : ''}`;
 
         return `
-            <div class="coin-card" tabindex="0" role="button" aria-label="${ariaLabel}" onclick="openModal('${coinDataStr}')">
+            <div class="coin-card" tabindex="0" role="button" aria-label="${ariaLabel}" title="${altText}" onclick="openModal('${coinDataStr}')">
                 <div class="coin-img-wrapper">${imgHtml}</div>
                 <div class="coin-info">
                     <div class="coin-name">${coin.name}</div>
@@ -347,13 +385,20 @@
         }, {});
     }
 
-    function openModal(coinDataStr) {
-        // Save focus to restore later
+    // UPDATED OPEN MODAL: Supports URL update
+    function openModal(coinDataStr, updateUrl = true) {
         lastFocusedElement = document.activeElement;
 
         const coin = JSON.parse(decodeURIComponent(coinDataStr));
         const modal = document.getElementById('coinModal');
         
+        // DEEP LINKING: Update URL hash
+        if (updateUrl) {
+            const slug = getCoinSlug(coin);
+            // using pushState to avoid page jump if hash is complex, but normal hash is safer for history
+            history.pushState(null, null, '#' + slug);
+        }
+
         document.getElementById('modal-title').textContent = coin.name + (coin.subtype && coin.subtype !== 'ללא תיוג' ? ` (${coin.subtype})` : '');
         document.getElementById('modal-subtitle').textContent = `${coin.year} • ${coin.series}`;
         
@@ -389,7 +434,7 @@
 
         const table = document.getElementById('modal-stats');
         table.innerHTML = '';
-        const validStats = Object.entries(coin.stats).filter(([k,v]) => k.toLowerCase() !== 'description');
+        const validStats = Object.entries(coin.stats).filter(([k,v]) => k.toLowerCase() !== 'description' && k.toLowerCase() !== 'alt');
 
         if (validStats.length > 0) {
             for (const [key, value] of validStats) {
@@ -401,23 +446,24 @@
         }
         
         modal.style.display = "block";
-        
-        // Move focus to close button
         const closeBtn = modal.querySelector('.close-btn');
         if (closeBtn) closeBtn.focus();
-        
-        // Prevent background scrolling
         document.body.style.overflow = 'hidden';
     }
 
-    function closeModal() { 
+    // UPDATED CLOSE MODAL: Clears URL
+    function closeModal(updateUrl = true) { 
         document.getElementById('coinModal').style.display = "none"; 
         if (galleryViewer) { galleryViewer.destroy(); galleryViewer = null; }
         
-        // Restore scrolling
         document.body.style.overflow = 'auto';
         
-        // Restore focus
+        // DEEP LINKING: Clear hash
+        if (updateUrl) {
+            // Remove hash without refreshing, keep history clean
+            history.pushState("", document.title, window.location.pathname + window.location.search);
+        }
+
         if (lastFocusedElement) {
             lastFocusedElement.focus();
         }
@@ -429,24 +475,22 @@
 
     document.addEventListener('keydown', function(event) {
         if (event.key === "Escape") {
-            // Check if Viewer.js is open in fullscreen, if so let it handle ESC
             if (galleryViewer && galleryViewer.fulled) return;
             closeModal();
         }
         
-        // Trap focus inside modal
         const modal = document.getElementById('coinModal');
         if (modal.style.display === "block" && event.key === 'Tab') {
             const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
             const firstElement = focusableElements[0];
             const lastElement = focusableElements[focusableElements.length - 1];
 
-            if (event.shiftKey) { // Shift + Tab
+            if (event.shiftKey) { 
                 if (document.activeElement === firstElement) {
                     lastElement.focus();
                     event.preventDefault();
                 }
-            } else { // Tab
+            } else { 
                 if (document.activeElement === lastElement) {
                     firstElement.focus();
                     event.preventDefault();
@@ -455,6 +499,5 @@
         }
     });
 </script>
-
 </body>
 </html>

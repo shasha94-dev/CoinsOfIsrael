@@ -6,45 +6,31 @@
     <title>ארכיון המטבעות הישראלי</title>
         
     <link rel="icon" type="image/png" href="/static/favicon.svg">
+    <link rel="apple-touch-icon" href="/static/favicon.svg">
+
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"></script>
-    <script data-goatcounter="https://coinsofisrael.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-    
+    <script data-goatcounter="https://coinsofisrael.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&family=Heebo:wght@400;700;900&display=swap');
 
         :root { --primary: #0038b8; --bg: #f4f4f9; --text: #333; }
         body { font-family: 'Heebo', 'Assistant', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; text-align: right; }
         
-        /* Language Button */
-        .lang-btn { 
-            position: absolute; top: 20px; left: 20px; 
-            background: white; border: 1px solid #ccc; 
-            padding: 8px 15px; border-radius: 20px; 
-            cursor: pointer; font-weight: bold; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-            transition: 0.2s; z-index: 100; font-family: inherit;
-        }
-        .lang-btn:hover { background: #f0f0f0; }
-
-        /* LTR Overrides */
-        body[dir="ltr"] { text-align: left; }
-        body[dir="ltr"] .lang-btn { left: auto; right: 20px; }
-        body[dir="ltr"] .modal-right { text-align: left; }
-        body[dir="ltr"] .stats-key { text-align: left; }
-        body[dir="ltr"] .coin-meta { direction: ltr; } 
-        body[dir="ltr"] .series-headline { border-right: none; border-left: 4px solid var(--primary); }
-
+        /* ACCESSIBILITY: Skip Link */
         .skip-link { position: absolute; top: -40px; right: 0; background: #000; color: #fff; padding: 8px; z-index: 9999; transition: top 0.3s; text-decoration: none; }
         .skip-link:focus { top: 0; }
 
+        /* ACCESSIBILITY: Visible Focus Styles */
         button:focus-visible, a:focus-visible, .coin-card:focus-visible, .close-btn:focus-visible {
             outline: 3px solid #ff9900;
             outline-offset: 2px;
         }
 
         header { text-align: center; margin-bottom: 40px; }
-        h1 { color: var(--primary); margin-bottom: 30px; }
+        h1 { color: var(--primary); margin-bottom: 10px; }
         
         .controls button { padding: 10px 25px; font-size: 16px; border: none; cursor: pointer; background: #e0e0e0; color: #555; border-radius: 20px; margin: 0 5px; transition: 0.3s; font-family: inherit; }
         .controls button.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(0,56,184,0.3); font-weight: bold; }
@@ -72,7 +58,6 @@
         .coin-card { 
             background: white; border-radius: 10px; overflow: hidden; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s; 
-            position: relative;
         }
         .coin-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         
@@ -86,19 +71,30 @@
         .badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75em; display: inline-block; margin-top: 5px; }
         .badge.gray { background: #999; color: white; }
         
+        /* Modal */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
         .modal-content { background-color: #fefefe; margin: 5% auto; padding: 0; border-radius: 15px; width: 90%; max-width: 800px; display: flex; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popup 0.3s ease-out; height: 80vh; }
+        @keyframes popup { from {transform: scale(0.8); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+        
         .modal-left { width: 50%; background: #000; display: flex; flex-direction: column; align-items: center; overflow-y: auto; padding: 20px 0; }
         .modal-left img { max-width: 90%; max-height: auto; margin-bottom: 20px; box-shadow: 0 0 10px rgba(255,255,255,0.1); cursor: zoom-in; }
+        
         .modal-right { width: 50%; padding: 40px; display: flex; flex-direction: column; text-align: right; overflow-y: auto; }
-        .close-btn { align-self: flex-end; font-size: 28px; cursor: pointer; color: #aaa; margin-left: 0; margin-right: auto; border: none; background: none; }
+        .close-btn { 
+            align-self: flex-end; font-size: 28px; cursor: pointer; color: #aaa; margin-left: 0; margin-right: auto; 
+            border: none; background: none; 
+        }
+        .close-btn:hover { color: #000; }
+        
         .modal-title { font-size: 2em; color: var(--primary); margin-top: 0; margin-bottom: 10px; }
         .modal-subtitle { font-size: 1.2em; color: #666; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;}
         .stats-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .stats-table td { padding: 8px 0; border-bottom: 1px solid #eee; }
         .stats-key { font-weight: 600; color: #555; width: 40%; text-align: right; }
+        
         footer { margin-top: 50px; text-align: center; font-size: 0.9em; color: #666; }
         footer a { color: var(--primary); text-decoration: none; font-weight: bold; }
+
         @media (max-width: 700px) {
             .modal-content { flex-direction: column; margin: 10% auto; height: auto; max-height: 90vh; overflow-y: scroll; }
             .modal-left, .modal-right { width: 100%; height: auto; }
@@ -111,15 +107,13 @@
 
 <a href="#main-content" class="skip-link">דלג לתוכן</a>
 
-<button class="lang-btn" onclick="toggleLanguage()">🇺🇸 English</button>
-
 <header role="banner">
-    <h1 id="site-title">ארכיון המטבעות הישראלי</h1>
+    <h1>ארכיון המטבעות הישראלי</h1>
     <nav class="controls" aria-label="אפשרויות תצוגה">
         <button id="btn-year" class="active" onclick="setView('year')" aria-pressed="true">לפי שנה</button>
         <button id="btn-coin" onclick="setView('coin')" aria-pressed="false">לפי סוג</button>
         <a href="/about" style="text-decoration:none;">
-            <button id="btn-about">אודות ותודות</button>
+            <button>אודות ותודות</button>
         </a>
     </nav>
 </header>
@@ -129,10 +123,10 @@
 </main>
 
 <footer>
-    <a href="/accessibility" id="footer-acc">הצהרת נגישות</a>
+    <a href="/accessibility">הצהרת נגישות</a>
 </footer>
 
-<div id="coinModal" class="modal" role="dialog" aria-modal="true">
+<div id="coinModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-subtitle">
     <div class="modal-content">
         <div id="modal-images-container" class="modal-left"></div>
         <div class="modal-right">
@@ -144,104 +138,67 @@
         </div>
     </div>
 </div>
-
 <script>
     let allCoins = [];
-    let translationMap = {}; 
-    let sortConfig = {};
+    let sortConfig = { series_order: [], coin_order: {} };
     let galleryViewer = null;
     let lastFocusedElement = null;
 
-    // --- LANGUAGE SETUP ---
-    const urlParams = new URLSearchParams(window.location.search);
-    let currentLang = urlParams.get('lang') === 'en' ? 'en' : 'he';
+    fetch('/api/data')
+        .then(res => res.json())
+        .then(data => {
+            allCoins = data.coins;
+            sortConfig = data.config || { series_order: [], coin_order: {} };
+            
+            // 1. Load the view
+            setView('year');
+            
+            // 2. DEEP LINKING: Check if URL has a hash (e.g. #1985_CoinName)
+            checkHashAndOpen();
+        });
 
-    Promise.all([
-        fetch('/api/data').then(res => res.json()),
-        fetch('/api/translations').then(res => res.json())
-    ]).then(([data, translations]) => {
-        allCoins = data.coins;
-        sortConfig = data.config || {};
-        translationMap = translations;
-        
-        updateLangState(); 
-        checkHashAndOpen();
-    });
-
-    function getTrans(text) {
-        if (!text) return "";
-        if (typeof text === 'object' && text.he) text = text.he;
-        if (typeof text !== 'string' && typeof text !== 'number') return "";
-
-        if (currentLang === 'en' && translationMap[text]) {
-            return translationMap[text];
-        }
-        return text;
-    }
-
-    function getCanonical(obj) {
-        if (!obj) return "";
-        if (typeof obj === 'string') return obj;
-        return obj.he || "";
-    }
-
-    function toggleLanguage() {
-        currentLang = (currentLang === 'he') ? 'en' : 'he';
-        const url = new URL(window.location);
-        url.searchParams.set('lang', currentLang);
-        window.history.pushState({}, '', url);
-        updateLangState();
-    }
-
-    function updateLangState() {
-        // 1. Layout
-        document.documentElement.dir = (currentLang === 'he') ? 'rtl' : 'ltr';
-        document.body.style.textAlign = (currentLang === 'he') ? 'right' : 'left';
-        
-        // 2. Static UI Update
-        document.querySelector('.lang-btn').textContent = (currentLang === 'he') ? '🇺🇸 English' : '🇮🇱 עברית';
-        
-        document.getElementById('site-title').textContent = getTrans('ארכיון המטבעות הישראלי');
-        document.getElementById('btn-year').textContent = getTrans('לפי שנה');
-        document.getElementById('btn-coin').textContent = getTrans('לפי סוג');
-        document.getElementById('btn-about').textContent = getTrans('אודות ותודות');
-        document.getElementById('footer-acc').textContent = getTrans('הצהרת נגישות');
-        
-        // 3. Refresh Grid
-        setView(document.getElementById('btn-year').classList.contains('active') ? 'year' : 'coin');
-    }
-
+    // --- DEEP LINKING HELPER FUNCTIONS ---
+    
+    // Generates a unique URL-friendly ID for a coin
     function getCoinSlug(coin) {
-        const nameHe = getCanonical(coin.name);
-        const seriesHe = getCanonical(coin.series);
-        const subtypeHe = coin.subtype ? getCanonical(coin.subtype) : "";
-        let slug = `${coin.year}_${nameHe}_${seriesHe}`;
-        if (subtypeHe && subtypeHe !== 'ללא תיוג') slug += `_${subtypeHe}`;
+        // Create ID: Year_Name_Series
+        let slug = `${coin.year}_${coin.name}_${coin.series}`;
+        // Add subtype if exists
+        if (coin.subtype && coin.subtype !== 'ללא תיוג') {
+            slug += `_${coin.subtype}`;
+        }
+        // Replace spaces with dashes, remove parentheses for cleaner URLs
         return slug.replace(/\s+/g, '-').replace(/[()]/g, '');
     }
 
+    // Checks the URL hash and opens the modal if a match is found
     function checkHashAndOpen() {
         const hash = decodeURIComponent(window.location.hash.substring(1));
         if (hash) {
             const targetCoin = allCoins.find(c => getCoinSlug(c) === hash);
             if (targetCoin) {
+                // Pass data as string just like the click handler does
                 const coinDataStr = encodeURIComponent(JSON.stringify(targetCoin));
-                openModal(coinDataStr, false); 
+                openModal(coinDataStr, false); // false = don't update hash again
             }
         } else {
+            // If hash is empty, ensure modal is closed
             closeModal(false);
         }
     }
+
+    // Listen to browser Back/Forward buttons
     window.addEventListener('hashchange', checkHashAndOpen);
 
-    // Helpers
+    // --- EXISTING LOGIC ---
+
     function extractYear(str) {
         if (!str) return 9999;
         const match = str.toString().match(/(\d{4})/);
         return match ? parseInt(match[0]) : 9999;
     }
-    function getNumericValue(nameObj) {
-        const name = getCanonical(nameObj); 
+
+    function getNumericValue(name) {
         if(name.includes('/')) {
             const parts = name.split('/');
             if(parts.length >= 2) {
@@ -253,17 +210,16 @@
         const match = name.match(/([\d\.]+)/);
         return match ? parseFloat(match[0]) : 0;
     }
-    function getSeriesRank(seriesObj) {
-        const name = getCanonical(seriesObj); 
+
+    function getSeriesRank(seriesName) {
         if (!sortConfig.series_order) return 9999;
-        const index = sortConfig.series_order.indexOf(name);
+        const index = sortConfig.series_order.indexOf(seriesName);
         return index !== -1 ? index : 9999;
     }
-    function getCoinRank(seriesObj, coinNameObj) {
-        const sName = getCanonical(seriesObj);
-        const cName = getCanonical(coinNameObj);
-        if (!sortConfig.coin_order || !sortConfig.coin_order[sName]) return 9999;
-        const index = sortConfig.coin_order[sName].indexOf(cName);
+
+    function getCoinRank(seriesName, coinName) {
+        if (!sortConfig.coin_order || !sortConfig.coin_order[seriesName]) return 9999;
+        const index = sortConfig.coin_order[seriesName].indexOf(coinName);
         return index !== -1 ? index : 9999;
     }
 
@@ -306,42 +262,31 @@
                 
                 const coinsInYear = grouped[key];
                 const bySeries = coinsInYear.reduce((acc, coin) => {
-                    const sKey = getCanonical(coin.series);
-                    acc[sKey] = acc[sKey] || [];
-                    acc[sKey].push(coin);
+                    acc[coin.series] = acc[coin.series] || [];
+                    acc[coin.series].push(coin);
                     return acc;
                 }, {});
 
-                const seriesKeys = Object.keys(bySeries).sort((sa, sb) => {
-                    const idxA = sortConfig.series_order ? sortConfig.series_order.indexOf(sa) : -1;
-                    const idxB = sortConfig.series_order ? sortConfig.series_order.indexOf(sb) : -1;
-                    return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
-                });
+                const seriesKeys = Object.keys(bySeries).sort((sa, sb) => getSeriesRank(sa) - getSeriesRank(sb));
 
-                seriesKeys.forEach(sKey => {
-                    const firstCoin = bySeries[sKey][0];
-                    const seriesNameTrans = getTrans(getCanonical(firstCoin.series));
-
+                seriesKeys.forEach(seriesName => {
                     const seriesDiv = document.createElement('div');
-                    seriesDiv.innerHTML = `<div class="series-headline">${seriesNameTrans}</div>`;
+                    seriesDiv.innerHTML = `<div class="series-headline">${seriesName}</div>`;
                     section.appendChild(seriesDiv);
 
-                    const byCoinType = bySeries[sKey].reduce((acc, coin) => {
-                        const cKey = getCanonical(coin.name);
-                        acc[cKey] = acc[cKey] || [];
-                        acc[cKey].push(coin);
+                    const byCoinType = bySeries[seriesName].reduce((acc, coin) => {
+                        acc[coin.name] = acc[coin.name] || [];
+                        acc[coin.name].push(coin);
                         return acc;
                     }, {});
 
                     const coinTypeKeys = Object.keys(byCoinType).sort((nA, nB) => {
-                        const idxA = (sortConfig.coin_order[sKey] || []).indexOf(nA);
-                        const idxB = (sortConfig.coin_order[sKey] || []).indexOf(nB);
-                        if(idxA !== -1 && idxB !== -1) return idxA - idxB;
-                        if(idxA !== -1) return -1;
-                        if(idxB !== -1) return 1;
-                        const objA = byCoinType[nA][0].name;
-                        const objB = byCoinType[nB][0].name;
-                        return getNumericValue(objA) - getNumericValue(objB);
+                        const rankA = getCoinRank(seriesName, nA);
+                        const rankB = getCoinRank(seriesName, nB);
+                        if(rankA !== 9999 && rankB !== 9999) return rankA - rankB;
+                        if(rankA !== 9999) return -1;
+                        if(rankB !== 9999) return 1;
+                        return getNumericValue(nA) - getNumericValue(nB);
                     });
 
                     let simpleCoinsBuffer = [];
@@ -357,23 +302,23 @@
                             simpleCoinsBuffer.push(coinsOfType[0]);
                         }
                     });
-                    if (simpleCoinsBuffer.length > 0) renderRow(section, simpleCoinsBuffer, mode);
+                    if (simpleCoinsBuffer.length > 0) {
+                        renderRow(section, simpleCoinsBuffer, mode);
+                    }
                 });
                 gallery.appendChild(section);
             } else {
-                const coinObj = grouped[key][0];
-                const currentSeriesCanonical = getCanonical(coinObj.series);
-                
-                if (currentSeriesCanonical !== lastSeriesName) {
+                const currentSeries = grouped[key][0].series;
+                if (currentSeries !== lastSeriesName) {
                     const headlineDiv = document.createElement('div');
-                    headlineDiv.innerHTML = `<div class="series-headline">${getTrans(getCanonical(coinObj.series))}</div>`;
+                    headlineDiv.innerHTML = `<div class="series-headline">${currentSeries}</div>`;
                     gallery.appendChild(headlineDiv);
-                    lastSeriesName = currentSeriesCanonical;
+                    lastSeriesName = currentSeries;
                 }
                 const section = document.createElement('div');
                 section.className = 'group-section';
-                const titleTrans = getTrans(getCanonical(coinObj.name));
-                section.innerHTML = `<div class="group-header"><h2 class="group-title">${titleTrans}</h2></div>`;
+                const displayTitle = key.includes('___') ? key.split('___')[0] : key;
+                section.innerHTML = `<div class="group-header"><h2 class="group-title">${displayTitle}</h2></div>`;
                 renderRow(section, grouped[key].sort((a, b) => extractYear(a.year) - extractYear(b.year)), mode);
                 gallery.appendChild(section);
             }
@@ -388,6 +333,7 @@
         html += `</div>`;
         rowDiv.innerHTML = html;
         container.appendChild(rowDiv);
+        
         const cards = rowDiv.querySelectorAll('.coin-card');
         cards.forEach(card => {
             card.addEventListener('keydown', (e) => {
@@ -400,13 +346,11 @@
     }
 
     function createCardHtml(coin, mode) {
-        const name = getTrans(getCanonical(coin.name));
-        const series = getTrans(getCanonical(coin.series));
-        const subtype = getTrans(getCanonical(coin.subtype));
-
         let imgHtml;
-        let altText = `מטבע ${name}`;
-        if (coin.stats && coin.stats.alt) altText = getTrans(coin.stats.alt);
+        let altText = `מטבע ${coin.name}`;
+        if (coin.stats && coin.stats.alt) {
+            altText = coin.stats.alt;
+        }
 
         if (coin.has_image && coin.images.length > 0) {
             const folder = coin.thumb_available ? 'thumbnails' : 'images';
@@ -418,21 +362,19 @@
         const coinDataStr = encodeURIComponent(JSON.stringify(coin));
         
         let badgeHtml = '';
-        if (subtype && subtype !== getTrans('ללא תיוג')) {
-            badgeHtml = `<span class="badge">${subtype}</span>`;
-        } else if (subtype && subtype === getTrans('ללא תיוג')) {
-             badgeHtml = `<span class="badge gray">${subtype}</span>`;
+        if (coin.subtype) {
+            const badgeClass = coin.subtype === 'ללא תיוג' ? 'badge gray' : 'badge';
+            badgeHtml = `<span class="${badgeClass}">${coin.subtype}</span>`;
         }
 
-        const yearLabel = getTrans('שנה');
-        const ariaLabel = `${name}, ${yearLabel} ${coin.year}, ${subtype ? subtype : ''}`;
+        const ariaLabel = `${coin.name}, שנה ${coin.year}, ${coin.subtype ? 'סוג ' + coin.subtype : ''}`;
 
         return `
             <div class="coin-card" tabindex="0" role="button" aria-label="${ariaLabel}" title="${altText}" onclick="openModal('${coinDataStr}')">
                 <div class="coin-img-wrapper">${imgHtml}</div>
                 <div class="coin-info">
-                    <div class="coin-name">${name}</div>
-                    <div class="coin-meta" aria-label="${yearLabel} ${coin.year}">${mode === 'coin' ? coin.year : series}</div>
+                    <div class="coin-name">${coin.name}</div>
+                    <div class="coin-meta" aria-label="שנת ${coin.year}, סדרה ${coin.series}">${mode === 'coin' ? coin.year : coin.series}</div>
                     ${badgeHtml}
                 </div>
             </div>
@@ -441,62 +383,51 @@
 
     function groupData(data, mode) {
         return data.reduce((acc, item) => {
-            let key;
-            if (mode === 'year') {
-                key = item.year;
-            } else {
-                const nHe = getCanonical(item.name);
-                const sHe = getCanonical(item.series);
-                key = nHe + '___' + sHe;
-            }
+            let key = (mode === 'year') ? item.year : item.name + '___' + item.series;
             if (!acc[key]) acc[key] = [];
             acc[key].push(item);
             return acc;
         }, {});
     }
 
+    // UPDATED OPEN MODAL: Supports URL update
     function openModal(coinDataStr, updateUrl = true) {
         lastFocusedElement = document.activeElement;
+
         const coin = JSON.parse(decodeURIComponent(coinDataStr));
         const modal = document.getElementById('coinModal');
         
+        // DEEP LINKING: Update URL hash
         if (updateUrl) {
             const slug = getCoinSlug(coin);
-            const url = new URL(window.location);
-            url.hash = slug;
-            history.pushState(null, null, url);
+            // using pushState to avoid page jump if hash is complex, but normal hash is safer for history
+            history.pushState(null, null, '#' + slug);
         }
 
-        const name = getTrans(getCanonical(coin.name));
-        const series = getTrans(getCanonical(coin.series));
-        const subtype = getTrans(getCanonical(coin.subtype));
-
-        document.getElementById('modal-title').textContent = name + (subtype && subtype !== getTrans('ללא תיוג') ? ` (${subtype})` : '');
-        document.getElementById('modal-subtitle').textContent = `${coin.year} • ${series}`;
+        document.getElementById('modal-title').textContent = coin.name + (coin.subtype && coin.subtype !== 'ללא תיוג' ? ` (${coin.subtype})` : '');
+        document.getElementById('modal-subtitle').textContent = `${coin.year} • ${coin.series}`;
         
-        let desc = "";
-        if (coin.stats && coin.stats.description) {
-            if (coin.stats.description.he) { 
-                desc = currentLang === 'en' ? coin.stats.description.en : coin.stats.description.he;
-            } else {
-                desc = getTrans(coin.stats.description);
-            }
-        }
-        document.getElementById('modal-desc').innerHTML = desc;
-        document.getElementById('modal-desc').style.display = desc ? 'block' : 'none';
+        const descDiv = document.getElementById('modal-desc');
+        descDiv.innerHTML = coin.stats.description || '';
+        descDiv.style.display = coin.stats.description ? 'block' : 'none';
 
         const imgContainer = document.getElementById('modal-images-container');
         imgContainer.innerHTML = ''; 
-        if (galleryViewer) galleryViewer.destroy();
+
+        if (galleryViewer) { galleryViewer.destroy(); }
 
         if (coin.has_image && coin.images.length > 0) {
             coin.images.forEach(imgSrc => {
                 const img = document.createElement('img');
                 img.src = "/images/" + imgSrc;
-                img.alt = `Zoomed image of ${name}`; 
+                img.alt = `תמונה מוגדלת של ${coin.name}`; 
                 imgContainer.appendChild(img);
             });
-            galleryViewer = new Viewer(imgContainer, { inline: false, toolbar: true, navbar: true });
+            galleryViewer = new Viewer(imgContainer, {
+                inline: false, toolbar: true, navbar: true, title: true,
+                tooltip: true, movable: true, zoomable: true, rotatable: true,
+                scalable: true, transition: true, fullscreen: true, keyboard: true
+            });
         } else {
             const noImg = document.createElement('div');
             noImg.className = 'no-image';
@@ -508,18 +439,15 @@
 
         const table = document.getElementById('modal-stats');
         table.innerHTML = '';
-        const ignored = ['description', 'alt'];
-        const stats = coin.stats || {};
-        const validKeys = Object.keys(stats).filter(k => !ignored.includes(k.toLowerCase()));
+        const validStats = Object.entries(coin.stats).filter(([k,v]) => k.toLowerCase() !== 'description' && k.toLowerCase() !== 'alt');
 
-        if (validKeys.length > 0) {
-            validKeys.forEach(key => {
-                const val = getTrans(stats[key]);
-                const label = getTrans(key);
-                table.innerHTML += `<tr><td class="stats-key">${label}</td><td class="stats-val">${val}</td></tr>`;
-            });
+        if (validStats.length > 0) {
+            for (const [key, value] of validStats) {
+                const label = key.charAt(0).toUpperCase() + key.slice(1);
+                table.innerHTML += `<tr><td class="stats-key">${label}</td><td class="stats-val">${value}</td></tr>`;
+            }
         } else {
-            table.innerHTML = `<tr><td colspan="2" style="color:#999; text-align:center;">${getTrans('אין נתונים נוספים')}</td></tr>`;
+            table.innerHTML = `<tr><td colspan="2" style="color:#999; text-align:center;">אין נתונים נוספים.</td></tr>`;
         }
         
         modal.style.display = "block";
@@ -528,37 +456,53 @@
         document.body.style.overflow = 'hidden';
     }
 
+    // UPDATED CLOSE MODAL: Clears URL
     function closeModal(updateUrl = true) { 
         document.getElementById('coinModal').style.display = "none"; 
         if (galleryViewer) { galleryViewer.destroy(); galleryViewer = null; }
+        
         document.body.style.overflow = 'auto';
+        
+        // DEEP LINKING: Clear hash
         if (updateUrl) {
-            const url = new URL(window.location);
-            url.hash = '';
-            history.pushState("", document.title, url);
+            // Remove hash without refreshing, keep history clean
+            history.pushState("", document.title, window.location.pathname + window.location.search);
         }
-        if (lastFocusedElement) lastFocusedElement.focus();
+
+        if (lastFocusedElement) {
+            lastFocusedElement.focus();
+        }
     }
     
-    window.onclick = function(event) { if (event.target == document.getElementById('coinModal')) closeModal(); }
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('coinModal')) closeModal();
+    }
+
     document.addEventListener('keydown', function(event) {
         if (event.key === "Escape") {
             if (galleryViewer && galleryViewer.fulled) return;
             closeModal();
         }
+        
         const modal = document.getElementById('coinModal');
         if (modal.style.display === "block" && event.key === 'Tab') {
             const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
             const firstElement = focusableElements[0];
             const lastElement = focusableElements[focusableElements.length - 1];
+
             if (event.shiftKey) { 
-                if (document.activeElement === firstElement) { lastElement.focus(); event.preventDefault(); }
+                if (document.activeElement === firstElement) {
+                    lastElement.focus();
+                    event.preventDefault();
+                }
             } else { 
-                if (document.activeElement === lastElement) { firstElement.focus(); event.preventDefault(); }
+                if (document.activeElement === lastElement) {
+                    firstElement.focus();
+                    event.preventDefault();
+                }
             }
         }
     });
 </script>
-
 </body>
 </html>

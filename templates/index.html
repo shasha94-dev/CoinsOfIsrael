@@ -15,189 +15,206 @@
 
         :root { --primary: #0038b8; --bg: #f4f4f9; --text: #333; }
         
-        /* Global Settings */
+        /* GLOBAL RESET for sizing safety */
+        *, *:before, *:after {
+            box-sizing: border-box;
+        }
+
         html, body { 
             font-family: 'Heebo', 'Assistant', sans-serif; 
             background: var(--bg); 
             color: var(--text); 
-            margin: 0; 
-            padding: 20px; 
+            margin: 0; padding: 20px; 
             text-align: right; 
-            overflow-x: hidden;
-            width: 100%;
-            box-sizing: border-box;
+            overflow-x: hidden; width: 100%;
         }
         
-        /* HEADER LAYOUT */
-        header { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            position: relative;
-            margin-bottom: 40px; 
-            width: 100%;
-        }
-
-        /* Language Button - ALWAYS FIXED TOP LEFT */
-        .lang-btn { 
-            position: absolute; 
-            top: 0; 
-            left: 20px !important; 
-            right: auto !important; 
-            background: white; border: 1px solid #ccc; 
-            padding: 8px 0; 
-            border-radius: 20px; 
-            cursor: pointer; font-weight: bold; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-            transition: 0.2s; z-index: 100; font-family: inherit; font-size: 14px;
-            width: 120px; text-align: center;
-        }
+        /* HEADER */
+        header { display: flex; flex-direction: column; align-items: center; position: relative; margin-bottom: 40px; width: 100%; }
+        .lang-btn { position: absolute; top: 0; left: 20px !important; right: auto !important; background: white; border: 1px solid #ccc; padding: 8px 0; border-radius: 20px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s; z-index: 100; font-family: inherit; font-size: 14px; width: 120px; text-align: center; }
         .lang-btn:hover { background: #f0f0f0; }
+        h1 { color: var(--primary); margin: 40px 0 30px 0; text-align: center; width: 100%; line-height: 1.2; word-wrap: break-word; overflow-wrap: break-word; padding: 0 10px; }
 
-        /* Main Title */
-        h1 { 
-            color: var(--primary); 
-            margin: 40px 0 30px 0; /* Top margin accommodates lang button */
-            text-align: center; 
-            width: 100%; 
-            line-height: 1.2;
-            word-wrap: break-word;      
-            overflow-wrap: break-word;  
-            padding: 0 10px;            
-        }
-
-        /* Navigation Buttons Container */
-        .controls {
-            display: flex;
-            flex-wrap: wrap; 
-            justify-content: center;
-            gap: 15px; 
-            width: 100%;
-        }
-
-        /* Buttons - FIXED SIZE ENFORCED */
-        .controls button { 
-            /* Fixed width calculated to fit "אודות ותודות" comfortably */
-            width: 160px; 
-            padding: 12px 0; /* Vertical padding only, width handles horizontal */
-            font-size: 16px; 
-            border: none; 
-            cursor: pointer; 
-            background: #e0e0e0; 
-            color: #555; 
-            border-radius: 20px; 
-            transition: 0.2s; 
-            font-family: inherit; 
-            white-space: nowrap;
-            text-align: center;
-            margin: 0;
-            
-            /* Ensure they don't shrink */
-            flex-shrink: 0; 
-        }
+        /* CONTROLS */
+        .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; }
+        .controls button { width: 160px; padding: 12px 0; font-size: 16px; border: none; cursor: pointer; background: #e0e0e0; color: #555; border-radius: 20px; transition: 0.2s; font-family: inherit; white-space: nowrap; text-align: center; margin: 0; flex-shrink: 0; }
+        .controls a { display: contents; text-decoration: none; } /* Fix for About button sizing */
         .controls button:hover { background: #d0d0d0; }
-        .controls button.active { 
-            background: var(--primary); 
-            color: white; 
-            box-shadow: 0 4px 10px rgba(0,56,184,0.3); 
-            font-weight: bold; 
-        }
+        .controls button.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(0,56,184,0.3); font-weight: bold; }
+        .controls button.cat-active { background: #444; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-weight: bold; }
+        .controls button:disabled { opacity: 0.4; cursor: not-allowed; background: #ccc; color: #888; box-shadow: none; }
 
-        /* --- LTR OVERRIDES (English Mode) --- */
+        /* LTR */
         html[dir="ltr"] body { text-align: left; }
-        /* Language button position is forced left above, no override needed */
         html[dir="ltr"] .coin-meta { direction: ltr; } 
         html[dir="ltr"] .series-headline { border-right: none; border-left: 4px solid var(--primary); }
-        
-        /* Fix Modal LTR */
         html[dir="ltr"] .modal-content { direction: ltr; text-align: left; }
-        html[dir="ltr"] .modal-right { text-align: left; }
+        html[dir="ltr"] .modal-right:not(.no-details-header) { text-align: left; }
         html[dir="ltr"] .stats-key { text-align: left; }
         html[dir="ltr"] .close-btn { margin-left: auto; margin-right: 0; }
-
-        /* Accessibility */
+        
         .skip-link { position: absolute; top: -40px; right: 0; background: #000; color: #fff; padding: 8px; z-index: 9999; transition: top 0.3s; text-decoration: none; }
         .skip-link:focus { top: 0; }
         button:focus-visible, a:focus-visible, .coin-card:focus-visible, .close-btn:focus-visible { outline: 3px solid #ff9900; outline-offset: 2px; }
 
-        /* Content */
+        /* GALLERY */
         .group-section { margin-bottom: 80px; }
         .group-header { border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 30px; }
         .group-title { font-size: 2.5em; color: #444; margin: 0; font-weight: 900; }
-        
-        .series-headline {
-            background: linear-gradient(90deg, var(--primary) 0%, #0055ff 100%);
-            color: white; padding: 15px 25px; border-radius: 8px;
-            margin: 40px 0 25px 0; font-size: 1.8em; font-weight: 700;
-            box-shadow: 0 4px 15px rgba(0,56,184,0.2);
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            line-height: 1.3;
-        }
-
+        .series-headline { background: linear-gradient(90deg, var(--primary) 0%, #0055ff 100%); color: white; padding: 15px 25px; border-radius: 8px; margin: 40px 0 25px 0; font-size: 1.8em; font-weight: 700; box-shadow: 0 4px 15px rgba(0,56,184,0.2); word-wrap: break-word; overflow-wrap: break-word; line-height: 1.3; }
         .coin-type-row { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px dashed #e0e0e0; }
         .coin-type-row:last-child { border-bottom: none; }
-
         .coin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        
-        .coin-card { 
-            background: white; border-radius: 10px; overflow: hidden; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s; 
-            position: relative;
-        }
+        .coin-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s; position: relative; }
         .coin-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        
         .coin-img-wrapper { height: 180px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; overflow: hidden; position: relative; }
         .coin-img-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; }
         .no-image { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 4em; color: #ccc; font-weight: bold; background: #e8e8e8; }
-        
         .coin-info { padding: 15px; text-align: center; }
         .coin-name { font-weight: 700; font-size: 1em; margin-bottom: 5px; }
         .coin-meta { font-size: 0.85em; color: #777; direction: ltr; display: inline-block; }
         .badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75em; display: inline-block; margin-top: 5px; }
         .badge.gray { background: #999; color: white; }
 
-        /* Modal */
+        /* --- MODAL LAYOUT --- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
-        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 0; border-radius: 15px; width: 90%; max-width: 800px; display: flex; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popup 0.3s ease-out; height: 80vh; }
-        .modal-left { width: 50%; background: #000; display: flex; flex-direction: column; align-items: center; overflow-y: auto; padding: 20px 0; }
-        .modal-left img { max-width: 90%; max-height: auto; margin-bottom: 20px; box-shadow: 0 0 10px rgba(255,255,255,0.1); cursor: zoom-in; }
-        .modal-right { width: 50%; padding: 40px; display: flex; flex-direction: column; text-align: right; overflow-y: auto; }
-        .close-btn { align-self: flex-end; font-size: 28px; cursor: pointer; color: #aaa; margin-left: 0; margin-right: auto; border: none; background: none; }
-        .modal-title { font-size: 2em; color: var(--primary); margin-top: 0; margin-bottom: 10px; }
-        .modal-subtitle { font-size: 1.2em; color: #666; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;}
-        .stats-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .stats-table td { padding: 8px 0; border-bottom: 1px solid #eee; }
+        
+        .modal-content { 
+            background-color: #fefefe; 
+            margin: 2vh auto; 
+            padding: 0; 
+            border-radius: 15px; 
+            width: 90%; max-width: 900px; 
+            height: auto; max-height: 96vh; 
+            display: flex; overflow: hidden; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+            animation: popup 0.3s ease-out; 
+            transition: all 0.3s ease;
+        }
+        
+        /* 1. DESKTOP STANDARD VIEW */
+        .modal-left { 
+            width: 65%; background: #000; display: flex; flex-direction: column; 
+            overflow-y: auto; padding: 20px 0; transition: width 0.3s ease;
+        }
+        .modal-image-wrapper {
+            width: 100%; display: flex; justify-content: center;
+            padding-bottom: 30px; margin-bottom: 30px;
+        }
+        .modal-image-wrapper:not(:last-child) { border-bottom: 4px solid var(--primary); }
+        .modal-left img { max-width: 95%; max-height: auto; box-shadow: 0 0 10px rgba(255,255,255,0.1); cursor: zoom-in; display: block; }
+
+        .modal-right { 
+            width: 35%; padding: 40px; display: flex; flex-direction: column; 
+            text-align: right; overflow-y: auto; transition: width 0.3s ease; position: relative;
+        }
+
+        /* 2. DESKTOP "NO DETAILS" VIEW */
+        .modal-content.no-details { flex-direction: column; background-color: #000; }
+        .modal-content.no-details .modal-right {
+            order: -1; width: 100%; background-color: #fefefe; 
+            padding: 25px 40px; border-bottom: 1px solid #444;
+            flex-shrink: 0; overflow-y: visible; text-align: center;
+        }
+        .modal-content.no-details .close-btn { position: absolute; top: 15px; right: 15px; margin: 0; }
+        html[dir="ltr"] .modal-content.no-details .close-btn { right: auto; left: 15px; }
+        
+        .modal-content.no-details .modal-left { width: 100%; flex-grow: 1; padding: 20px 0; overflow-y: auto; height: auto; min-height: 300px; }
+        .modal-content.no-details .modal-image-wrapper { padding-bottom: 40px; margin-bottom: 40px; }
+        .modal-content.no-details .modal-left img { max-width: 60%; max-height: 60vh; object-fit: contain; box-shadow: 0 0 15px rgba(255,255,255,0.15); }
+        .modal-content.no-details .stats-table, .modal-content.no-details #modal-desc { display: none !important; }
+
+        /* General Modal Elements */
+        .close-btn { align-self: flex-end; font-size: 28px; cursor: pointer; color: #aaa; margin-left: 0; margin-right: auto; border: none; background: none; z-index: 10;}
+        .modal-title { font-size: 2em; color: var(--primary); margin-top: 0; margin-bottom: 10px; word-wrap: break-word; }
+        .modal-subtitle { font-size: 1.2em; color: #666; margin-bottom: 20px; padding-bottom: 10px;}
+        .stats-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85em; }
+        .stats-table td { padding: 4px 0; border-bottom: 1px solid #eee; }
         .stats-key { font-weight: 600; color: #555; width: 40%; text-align: right; }
+        
         footer { margin-top: 50px; text-align: center; font-size: 0.9em; color: #666; }
         footer a { color: var(--primary); text-decoration: none; font-weight: bold; }
         
-        /* RESPONSIVE & MOBILE FIXES */
+        /* 3. MOBILE VIEW FIXES (Unified for both cases) */
         @media (max-width: 900px) {
-            /* Lang Button is ALREADY positioned absolute left, so we leave it there. */
-            /* Just ensure header has enough padding so title doesn't overlap it */
-            header {
-                padding-top: 50px; 
-            }
-
+            .lang-btn { position: static; margin-bottom: 15px; align-self: center; }
+            body[dir="ltr"] .lang-btn { align-self: center; }
             h1 { font-size: 1.8em; margin-top: 10px; }
             .series-headline { font-size: 1.3em; padding: 12px 15px; }
-
-            .controls {
-                flex-direction: column; 
-                align-items: center;
-                gap: 10px;
+            .controls { gap: 10px; padding: 0 10px; }
+            .controls button { width: 200px; max-width: 90%; min-width: auto; text-align: center; }
+            
+            /* GLOBAL MOBILE MODAL RESET */
+            .modal-content, .modal-content.no-details { 
+                flex-direction: column !important; 
+                margin: 5% auto; 
+                height: auto; max-height: 90vh; 
+                overflow-y: auto; /* Allow vertical scroll */
+                overflow-x: hidden; /* Prevent horizontal scroll */
+                background-color: #fefefe; 
+                width: 90%;
             }
-            .controls button {
-                /* On mobile, use a wider fixed size for easier tapping */
-                width: 200px;
+            
+            /* RESET WIDTHS */
+            .modal-left, .modal-right { 
+                width: 100% !important; 
+                height: auto !important; 
+                flex: none; 
+                background-color: transparent; 
             }
 
-            .modal-content { flex-direction: column; margin: 10% auto; height: auto; max-height: 90vh; overflow-y: scroll; }
-            .modal-left, .modal-right { width: 100%; height: auto; }
-            .modal-left { max-height: 300px; padding: 20px 0; }
-            .close-btn { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.8); padding: 0 10px; border-radius: 5px; z-index: 10; }
+            /* TEXT SECTION (Header) - ALWAYS FIRST */
+            .modal-right {
+                order: 1 !important; 
+                background-color: #fefefe;
+                border-bottom: 1px solid #ddd;
+                text-align: center !important; 
+                padding: 20px;
+                display: flex; flex-direction: column; align-items: center;
+            }
+            
+            html[dir="ltr"] .modal-right { text-align: center !important; }
+            .stats-key, .stats-table td { text-align: center !important; } 
+
+            /* IMAGE SECTION - ALWAYS SECOND */
+            .modal-left {
+                order: 2 !important; 
+                background-color: #000;
+                padding: 20px 0;
+                display: flex; flex-direction: column; align-items: center !important; 
+                text-align: center !important;
+            }
+            
+            /* NO DETAILS OVERRIDE */
+            .modal-content.no-details .modal-left {
+                display: flex !important; flex-direction: column !important;
+                align-items: center !important; justify-content: flex-start !important;
+            }
+
+            /* Wrapper on Mobile */
+            .modal-image-wrapper {
+                padding-bottom: 20px; margin-bottom: 20px;
+                width: 100%;
+                display: flex; justify-content: center; align-items: center;
+            }
+
+            /* SAFE IMAGE SIZING for Mobile - Use VW to prevent cut-off */
+            .modal-left img, 
+            .modal-content.no-details .modal-left img {
+                width: auto !important;
+                max-width: 85vw !important; /* Force fit within screen width */
+                height: auto; 
+                max-height: 40vh !important; 
+                object-fit: contain; 
+                margin: 0 auto !important; 
+                display: block;
+            }
+            
+            /* Close Button Logic */
+            .close-btn { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.8); padding: 0 10px; border-radius: 5px; margin: 0; }
             html[dir="ltr"] .close-btn { left: auto; right: 10px; }
+            .modal-content .close-btn, .modal-content.no-details .close-btn { top: 10px; right: auto; left: 10px; }
+            html[dir="ltr"] .modal-content .close-btn, html[dir="ltr"] .modal-content.no-details .close-btn { left: auto; right: 10px; }
         }
     </style>
 </head>
@@ -210,13 +227,20 @@
 
     <h1 id="site-title">ארכיון המטבעות הישראלי</h1>
     
-    <nav class="controls" aria-label="אפשרויות תצוגה">
-        <button id="btn-year" class="active" onclick="setView('year')" aria-pressed="true">לפי שנה</button>
-        <button id="btn-coin" onclick="setView('coin')" aria-pressed="false">לפי סוג</button>
-        <a href="/about" style="text-decoration:none;">
-            <button id="btn-about">אודות ותודות</button>
-        </a>
-    </nav>
+    <div style="display:flex; flex-direction:column; gap:15px; align-items:center; width:100%;">
+        <nav class="controls" aria-label="קטגוריה">
+            <button id="btn-cat-circ" class="cat-active" onclick="setCategory('circulation')">מחזור</button>
+            <button id="btn-cat-sets" onclick="setCategory('sets')">סטים לאספנים</button>
+        </nav>
+
+        <nav class="controls" aria-label="אפשרויות תצוגה">
+            <button id="btn-year" class="active" onclick="setView('year')" aria-pressed="true">לפי שנה</button>
+            <button id="btn-coin" onclick="setView('coin')" aria-pressed="false">לפי סוג</button>
+            <a href="/about">
+                <button id="btn-about">אודות ותודות</button>
+            </a>
+        </nav>
+    </div>
 </header>
 
 <main id="main-content">
@@ -249,6 +273,9 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     let currentLang = urlParams.get('lang') === 'en' ? 'en' : 'he';
+    let urlCat = urlParams.get('category') || 'circulation';
+    const catMap = { 'circulation': 'מחזור', 'sets': 'סטים לאספנים' };
+    let currentCategory = catMap[urlCat] || 'מחזור';
 
     Promise.all([
         fetch('/api/data').then(res => res.json()),
@@ -257,19 +284,73 @@
         allCoins = data.coins;
         sortConfig = data.config || {};
         translationMap = translations;
-        
-        updateLangState(); 
+        updateState(false);
         checkHashAndOpen();
     });
+
+    function updateState(pushHistory = true) {
+        document.documentElement.dir = (currentLang === 'he') ? 'rtl' : 'ltr';
+        document.documentElement.lang = currentLang;
+        document.body.style.textAlign = (currentLang === 'he') ? 'right' : 'left';
+        document.querySelector('.lang-btn').textContent = (currentLang === 'he') ? '🇺🇸 English' : '🇮🇱 עברית';
+
+        const isSets = (currentCategory === 'סטים לאספנים');
+        const catKey = isSets ? 'sets' : 'circulation';
+        document.getElementById('btn-cat-circ').className = !isSets ? 'cat-active' : '';
+        document.getElementById('btn-cat-sets').className = isSets ? 'cat-active' : '';
+        
+        const btnYear = document.getElementById('btn-year');
+        const btnCoin = document.getElementById('btn-coin');
+        if (isSets) {
+            btnYear.disabled = true;
+            btnCoin.disabled = true;
+        } else {
+            btnYear.disabled = false;
+            btnCoin.disabled = false;
+        }
+
+        document.getElementById('site-title').textContent = getTrans('ארכיון המטבעות הישראלי');
+        document.getElementById('btn-year').textContent = getTrans('לפי שנה');
+        document.getElementById('btn-coin').textContent = getTrans('לפי סוג');
+        document.getElementById('btn-about').textContent = getTrans('אודות ותודות');
+        document.getElementById('footer-acc').textContent = getTrans('הצהרת נגישות');
+        document.getElementById('btn-cat-circ').textContent = getTrans('מחזור');
+        document.getElementById('btn-cat-sets').textContent = getTrans('סטים לאספנים');
+
+        if (pushHistory) {
+            const url = new URL(window.location);
+            url.searchParams.set('lang', currentLang);
+            url.searchParams.set('category', catKey);
+            window.history.pushState({}, '', url);
+        }
+
+        if (isSets) {
+            setView('sets');
+        } else {
+            const activeMode = document.getElementById('btn-year').classList.contains('active') ? 'year' : 'coin';
+            setView(activeMode);
+        }
+    }
+
+    function toggleLanguage() {
+        currentLang = (currentLang === 'he') ? 'en' : 'he';
+        updateState();
+    }
+
+    function setCategory(catKey) {
+        currentCategory = catMap[catKey] || 'מחזור';
+        if (currentCategory === 'מחזור') {
+            document.getElementById('btn-year').classList.add('active');
+            document.getElementById('btn-coin').classList.remove('active');
+        }
+        updateState();
+    }
 
     function getTrans(text) {
         if (!text) return "";
         if (typeof text === 'object' && text.he) text = text.he;
         if (typeof text !== 'string' && typeof text !== 'number') return "";
-
-        if (currentLang === 'en' && translationMap[text]) {
-            return translationMap[text];
-        }
+        if (currentLang === 'en' && translationMap[text]) return translationMap[text];
         return text;
     }
 
@@ -277,30 +358,6 @@
         if (!obj) return "";
         if (typeof obj === 'string') return obj;
         return obj.he || "";
-    }
-
-    function toggleLanguage() {
-        currentLang = (currentLang === 'he') ? 'en' : 'he';
-        const url = new URL(window.location);
-        url.searchParams.set('lang', currentLang);
-        window.history.pushState({}, '', url);
-        updateLangState();
-    }
-
-    function updateLangState() {
-        document.documentElement.dir = (currentLang === 'he') ? 'rtl' : 'ltr';
-        document.documentElement.lang = currentLang;
-        document.body.style.textAlign = (currentLang === 'he') ? 'right' : 'left';
-        
-        document.querySelector('.lang-btn').textContent = (currentLang === 'he') ? '🇺🇸 English' : '🇮🇱 עברית';
-        
-        document.getElementById('site-title').textContent = getTrans('ארכיון המטבעות הישראלי');
-        document.getElementById('btn-year').textContent = getTrans('לפי שנה');
-        document.getElementById('btn-coin').textContent = getTrans('לפי סוג');
-        document.getElementById('btn-about').textContent = getTrans('אודות ותודות');
-        document.getElementById('footer-acc').textContent = getTrans('הצהרת נגישות');
-        
-        setView(document.getElementById('btn-year').classList.contains('active') ? 'year' : 'coin');
     }
 
     function getCoinSlug(coin) {
@@ -362,29 +419,53 @@
     function setView(mode) {
         const btnYear = document.getElementById('btn-year');
         const btnCoin = document.getElementById('btn-coin');
-        btnYear.className = mode === 'year' ? 'active' : '';
-        btnCoin.className = mode === 'coin' ? 'active' : '';
-        btnYear.setAttribute('aria-pressed', mode === 'year');
-        btnCoin.setAttribute('aria-pressed', mode === 'coin');
+        
+        if (mode === 'sets') {
+            btnYear.className = '';
+            btnCoin.className = '';
+        } else {
+            btnYear.className = mode === 'year' ? 'active' : '';
+            btnCoin.className = mode === 'coin' ? 'active' : '';
+            btnYear.setAttribute('aria-pressed', mode === 'year');
+            btnCoin.setAttribute('aria-pressed', mode === 'coin');
+        }
 
         const gallery = document.getElementById('gallery');
         gallery.innerHTML = '';
 
-        const grouped = groupData(allCoins, mode);
+        const filteredCoins = allCoins.filter(c => getCanonical(c.category) === currentCategory);
+
+        let grouped;
+        if (mode === 'sets') {
+            grouped = filteredCoins.reduce((acc, coin) => {
+                const sKey = getCanonical(coin.series);
+                acc[sKey] = acc[sKey] || [];
+                acc[sKey].push(coin);
+                return acc;
+            }, {});
+        } else {
+            grouped = groupData(filteredCoins, mode);
+        }
         
         const keys = Object.keys(grouped).sort((a,b) => {
-            if(mode === 'year') {
+            if (mode === 'year') {
                 return extractYear(a) - extractYear(b); 
             } else {
-                const coinA = grouped[a][0];
-                const coinB = grouped[b][0];
-                const seriesRankA = getSeriesRank(coinA.series);
-                const seriesRankB = getSeriesRank(coinB.series);
-                if (seriesRankA !== seriesRankB) return seriesRankA - seriesRankB;
-                const coinRankA = getCoinRank(coinA.series, coinA.name);
-                const coinRankB = getCoinRank(coinB.series, coinB.name);
-                if (coinRankA !== coinRankB) return coinRankA - coinRankB;
-                return getNumericValue(coinA.name) - getNumericValue(coinB.name);
+                if (mode === 'sets') {
+                    const idxA = sortConfig.series_order ? sortConfig.series_order.indexOf(a) : -1;
+                    const idxB = sortConfig.series_order ? sortConfig.series_order.indexOf(b) : -1;
+                    return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+                } else {
+                    const coinA = grouped[a][0];
+                    const coinB = grouped[b][0];
+                    const seriesRankA = getSeriesRank(coinA.series);
+                    const seriesRankB = getSeriesRank(coinB.series);
+                    if (seriesRankA !== seriesRankB) return seriesRankA - seriesRankB;
+                    const coinRankA = getCoinRank(coinA.series, coinA.name);
+                    const coinRankB = getCoinRank(coinB.series, coinB.name);
+                    if (coinRankA !== coinRankB) return coinRankA - coinRankB;
+                    return getNumericValue(coinA.name) - getNumericValue(coinB.name);
+                }
             }
         });
 
@@ -413,7 +494,6 @@
                 seriesKeys.forEach(sKey => {
                     const firstCoin = bySeries[sKey][0];
                     const seriesNameTrans = getTrans(getCanonical(firstCoin.series));
-
                     const seriesDiv = document.createElement('div');
                     seriesDiv.innerHTML = `<div class="series-headline">${seriesNameTrans}</div>`;
                     section.appendChild(seriesDiv);
@@ -431,9 +511,7 @@
                         if(idxA !== -1 && idxB !== -1) return idxA - idxB;
                         if(idxA !== -1) return -1;
                         if(idxB !== -1) return 1;
-                        const objA = byCoinType[nA][0].name;
-                        const objB = byCoinType[nB][0].name;
-                        return getNumericValue(objA) - getNumericValue(objB);
+                        return getNumericValue(nA) - getNumericValue(nB);
                     });
 
                     let simpleCoinsBuffer = [];
@@ -453,7 +531,10 @@
                 });
                 gallery.appendChild(section);
             } else {
-                const coinObj = grouped[key][0];
+                let coinList = grouped[key];
+                coinList.sort((a,b) => extractYear(a.year) - extractYear(b.year));
+
+                const coinObj = coinList[0];
                 const currentSeriesCanonical = getCanonical(coinObj.series);
                 
                 if (currentSeriesCanonical !== lastSeriesName) {
@@ -464,9 +545,13 @@
                 }
                 const section = document.createElement('div');
                 section.className = 'group-section';
-                const titleTrans = getTrans(getCanonical(coinObj.name));
-                section.innerHTML = `<div class="group-header"><h2 class="group-title">${titleTrans}</h2></div>`;
-                renderRow(section, grouped[key].sort((a, b) => extractYear(a.year) - extractYear(b.year)), mode);
+                
+                if (mode !== 'sets') {
+                    const titleTrans = getTrans(getCanonical(coinObj.name));
+                    section.innerHTML = `<div class="group-header"><h2 class="group-title">${titleTrans}</h2></div>`;
+                }
+                
+                renderRow(section, coinList, mode);
                 gallery.appendChild(section);
             }
         });
@@ -524,7 +609,9 @@
                 <div class="coin-img-wrapper">${imgHtml}</div>
                 <div class="coin-info">
                     <div class="coin-name">${name}</div>
-                    <div class="coin-meta" aria-label="${yearLabel} ${coin.year}">${mode === 'coin' ? coin.year : series}</div>
+                    <div class="coin-meta" aria-label="${yearLabel} ${coin.year}">
+                        ${mode === 'year' ? series : coin.year}
+                    </div>
                     ${badgeHtml}
                 </div>
             </div>
@@ -551,12 +638,13 @@
         lastFocusedElement = document.activeElement;
         const coin = JSON.parse(decodeURIComponent(coinDataStr));
         const modal = document.getElementById('coinModal');
+        const modalContent = modal.querySelector('.modal-content');
         
         if (updateUrl) {
             const slug = getCoinSlug(coin);
             const url = new URL(window.location);
             url.hash = slug;
-            history.pushState(null, null, url);
+            window.history.pushState({}, '', url);
         }
 
         const name = getTrans(getCanonical(coin.name));
@@ -575,18 +663,23 @@
             }
         }
         document.getElementById('modal-desc').innerHTML = desc;
-        document.getElementById('modal-desc').style.display = desc ? 'block' : 'none';
-
+        
         const imgContainer = document.getElementById('modal-images-container');
         imgContainer.innerHTML = ''; 
         if (galleryViewer) galleryViewer.destroy();
 
         if (coin.has_image && coin.images.length > 0) {
             coin.images.forEach(imgSrc => {
+                // WRAP IMAGE FOR FULL-WIDTH LINES
+                const wrapper = document.createElement('div');
+                wrapper.className = 'modal-image-wrapper';
+
                 const img = document.createElement('img');
                 img.src = "/images/" + imgSrc;
-                img.alt = `Zoomed image of ${name}`; 
-                imgContainer.appendChild(img);
+                img.alt = `Zoomed image of ${name}`;
+                
+                wrapper.appendChild(img);
+                imgContainer.appendChild(wrapper);
             });
             galleryViewer = new Viewer(imgContainer, { inline: false, toolbar: true, navbar: true });
         } else {
@@ -605,13 +698,18 @@
         const validKeys = Object.keys(stats).filter(k => !ignored.includes(k.toLowerCase()));
 
         if (validKeys.length > 0) {
+            table.style.display = 'table';
+            modalContent.classList.remove('no-details');
+            document.getElementById('modal-desc').style.display = desc ? 'block' : 'none';
             validKeys.forEach(key => {
                 const val = getTrans(stats[key]);
                 const label = getTrans(key);
                 table.innerHTML += `<tr><td class="stats-key">${label}</td><td class="stats-val">${val}</td></tr>`;
             });
         } else {
-            table.innerHTML = `<tr><td colspan="2" style="color:#999; text-align:center;">${getTrans('אין נתונים נוספים')}</td></tr>`;
+            table.style.display = 'none';
+            document.getElementById('modal-desc').style.display = 'none';
+            modalContent.classList.add('no-details');
         }
         
         modal.style.display = "block";
@@ -627,7 +725,7 @@
         if (updateUrl) {
             const url = new URL(window.location);
             url.hash = '';
-            history.pushState("", document.title, url);
+            window.history.pushState({}, '', url);
         }
         if (lastFocusedElement) lastFocusedElement.focus();
     }

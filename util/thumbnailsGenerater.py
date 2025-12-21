@@ -1,5 +1,6 @@
 import os
-from PIL import Image
+from PIL import Image, ImageOps
+
 
 # Configuration
 SOURCE_FOLDER = 'images'
@@ -38,13 +39,8 @@ def generate():
 
                 try:
                     with Image.open(source_file) as img:
-                        # Convert to RGB if needed (e.g. for transparent PNGs saving as JPG, 
-                        # though here we save as original format so RGBA is fine for PNG)
-                        
-                        # Create thumbnail (modifies img in place, preserves aspect ratio)
+                        img = ImageOps.exif_transpose(img)
                         img.thumbnail(MAX_SIZE)
-                        
-                        # Save
                         img.save(dest_file)
                         print(f"✅ Created: {relative_path}/{file}")
                         processed_count += 1

@@ -54,6 +54,17 @@ def ask_translation(text, context=""):
     folder_map[text] = english
     save_json(FOLDER_MAP_FILE, folder_map)
 
+def scan_details(d_path,coin):
+  if os.path.exists(d_path):
+        data = load_json(d_path)
+        #print(d_path)
+        for k, v in data.items():
+            ask_translation(k, f"Key in {coin}")
+            if isinstance(v, str):
+                ask_translation(v, f"Value in {coin}")
+            elif isinstance(v, dict) and 'he' in v:
+                ask_translation(v['he'], f"Value in {coin}")
+                
 def scan_all():
     print("🚀 Starting Complete Scan...")
     
@@ -65,15 +76,19 @@ def scan_all():
     # 2. SCAN FOLDERS
     print("\n--- Checking Folders ---")
     if os.path.exists(IMAGE_FOLDER):
-        for series in os.listdir(IMAGE_FOLDER):
-            path = os.path.join(IMAGE_FOLDER, series)
+        for collectionType in os.listdir(IMAGE_FOLDER):
+          if collectionType.endswith(".json"):
+            continue
+          collection_type_path = os.path.join(IMAGE_FOLDER, collectionType)
+          for series in os.listdir(collection_type_path):
+            path = os.path.join(collection_type_path, series)
             if not os.path.isdir(path): continue
             ask_translation(series, "Series Name")
             
             for year in os.listdir(path):
                 y_path = os.path.join(path, year)
                 if not os.path.isdir(y_path): continue
-                
+                print(y_path)
                 for coin in os.listdir(y_path):
                     c_path = os.path.join(y_path, coin)
                     if not os.path.isdir(c_path): continue
@@ -82,20 +97,13 @@ def scan_all():
                     
                     # 3. SCAN DETAILS.JSON
                     d_path = os.path.join(c_path, 'details.json')
-                    if os.path.exists(d_path):
-                        data = load_json(d_path)
-                        for k, v in data.items():
-                            ask_translation(k, f"Key in {coin}")
-                            if isinstance(v, str):
-                                ask_translation(v, f"Value in {coin}")
-                            elif isinstance(v, dict) and 'he' in v:
-                                ask_translation(v['he'], f"Value in {coin}")
+                    scan_details(d_path,coin)
 
                     # Subtypes
                     for sub in os.listdir(c_path):
                         if os.path.isdir(os.path.join(c_path, sub)):
                             ask_translation(sub, "Subtype")
-
+                            scan_details(os.path.join(os.path.join(c_path, sub), 'details.json'),coin)
     print("\n✨ Done! Refresh your website now.")
 
 if __name__ == "__main__":

@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ארכיון המטבעות הישראלי</title>
+    <title>{{ og_title | default('ארכיון המטבעות הישראלי') }}</title>
+    
+    <meta property="og:title" content="{{ og_title }}">
+    <meta property="og:description" content="{{ og_desc }}">
+    <meta property="og:image" content="{{ og_image }}"> 
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:type" content="website">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ og_title }}">
+    <meta name="twitter:description" content="{{ og_desc }}">
+    <meta name="twitter:image" content="{{ og_image }}">
         
     <link rel="icon" type="image/png" href="/static/favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.css">
@@ -15,7 +26,6 @@
 
         :root { --primary: #0038b8; --bg: #f4f4f9; --text: #333; }
         
-        /* GLOBAL RESET */
         *, *:before, *:after { box-sizing: border-box; }
 
         html, body { 
@@ -28,13 +38,11 @@
             scroll-behavior: smooth;
         }
         
-        /* HEADER */
         header { display: flex; flex-direction: column; align-items: center; position: relative; margin-bottom: 40px; width: 100%; }
         .lang-btn { position: absolute; top: 0; left: 20px !important; right: auto !important; background: white; border: 1px solid #ccc; padding: 8px 0; border-radius: 20px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s; z-index: 100; font-family: inherit; font-size: 14px; width: 120px; text-align: center; }
         .lang-btn:hover { background: #f0f0f0; }
         h1 { color: var(--primary); margin: 40px 0 30px 0; text-align: center; width: 100%; line-height: 1.2; word-wrap: break-word; overflow-wrap: break-word; padding: 0 10px; }
 
-        /* CONTROLS */
         .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; }
         .controls button { width: 160px; padding: 12px 0; font-size: 16px; border: none; cursor: pointer; background: #e0e0e0; color: #555; border-radius: 20px; transition: 0.2s; font-family: inherit; white-space: nowrap; text-align: center; margin: 0; flex-shrink: 0; }
         .controls a { display: contents; text-decoration: none; }
@@ -43,26 +51,16 @@
         .controls button.cat-active { background: #444; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-weight: bold; }
         .controls button:disabled { opacity: 0.4; cursor: not-allowed; background: #ccc; color: #888; box-shadow: none; }
 
-        /* JUMP SELECTOR STYLE */
         .jump-select {
             width: 160px; padding: 12px 15px; font-size: 16px; border-radius: 20px;
             border: 2px solid var(--primary); background: white; color: var(--primary);
             cursor: pointer; font-family: inherit; font-weight: bold; text-align: center;
-            
-            /* Remove default browser arrow */
             appearance: none; -webkit-appearance: none; -moz-appearance: none;
-            
-            /* Custom Arrow - Default RTL (Left Side) */
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230038b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat; 
-            background-position: left 15px center;
-            background-size: 12px auto;
-            
-            padding-left: 30px; /* Space for arrow in RTL */
-            padding-right: 15px;
+            background-repeat: no-repeat; background-position: left 15px center; background-size: 12px auto;
+            padding-left: 30px; padding-right: 15px;
         }
         
-        /* LTR Overrides (English) */
         html[dir="ltr"] body { text-align: left; }
         html[dir="ltr"] .coin-meta { direction: ltr; } 
         html[dir="ltr"] .series-headline { border-right: none; border-left: 4px solid var(--primary); }
@@ -71,18 +69,12 @@
         html[dir="ltr"] .stats-key { text-align: left; }
         html[dir="ltr"] .close-btn { margin-left: auto; margin-right: 0; }
         
-        /* Flip Dropdown Arrow for LTR */
-        html[dir="ltr"] .jump-select { 
-            background-position: right 15px center; 
-            padding-left: 15px; 
-            padding-right: 30px; 
-        }
+        html[dir="ltr"] .jump-select { background-position: right 15px center; padding-left: 15px; padding-right: 30px; }
         
         .skip-link { position: absolute; top: -40px; right: 0; background: #000; color: #fff; padding: 8px; z-index: 9999; transition: top 0.3s; text-decoration: none; }
         .skip-link:focus { top: 0; }
         button:focus-visible, a:focus-visible, .coin-card:focus-visible, .close-btn:focus-visible, select:focus-visible { outline: 3px solid #ff9900; outline-offset: 2px; }
 
-        /* GALLERY */
         .group-section { margin-bottom: 80px; scroll-margin-top: 20px; }
         .group-header { border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 30px; }
         .group-title { font-size: 2.5em; color: #444; margin: 0; font-weight: 900; }
@@ -101,28 +93,16 @@
         .badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75em; display: inline-block; margin-top: 5px; }
         .badge.gray { background: #999; color: white; }
 
-        /* --- MODAL LAYOUT --- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
-        
-        .modal-content { 
-            background-color: #fefefe; margin: 2vh auto; padding: 0; border-radius: 15px; 
-            width: 90%; max-width: 900px; height: auto; max-height: 96vh; 
-            display: flex; overflow: hidden; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popup 0.3s ease-out; transition: all 0.3s ease;
-        }
-        
-        /* 1. DESKTOP STANDARD VIEW */
+        .modal-content { background-color: #fefefe; margin: 2vh auto; padding: 0; border-radius: 15px; width: 90%; max-width: 900px; height: auto; max-height: 96vh; display: flex; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popup 0.3s ease-out; transition: all 0.3s ease; }
         .modal-left { width: 65%; background: #000; display: flex; flex-direction: column; overflow-y: auto; padding: 20px 0; transition: width 0.3s ease; }
         .modal-image-wrapper { width: 100%; display: flex; justify-content: center; padding-bottom: 30px; margin-bottom: 30px; }
         .modal-image-wrapper:not(:last-child) { border-bottom: 4px solid var(--primary); }
         .modal-left img { max-width: 95%; max-height: auto; box-shadow: 0 0 10px rgba(255,255,255,0.1); cursor: zoom-in; display: block; }
         .modal-right { width: 35%; padding: 40px; display: flex; flex-direction: column; text-align: right; overflow-y: auto; transition: width 0.3s ease; position: relative; }
 
-        /* 2. DESKTOP "NO DETAILS" VIEW */
         .modal-content.no-details { flex-direction: column; background-color: #000; }
-        .modal-content.no-details .modal-right {
-            order: -1; width: 100%; background-color: #fefefe; padding: 25px 40px; border-bottom: 1px solid #444; flex-shrink: 0; overflow-y: visible; text-align: center;
-        }
+        .modal-content.no-details .modal-right { order: -1; width: 100%; background-color: #fefefe; padding: 25px 40px; border-bottom: 1px solid #444; flex-shrink: 0; overflow-y: visible; text-align: center; }
         .modal-content.no-details .close-btn { position: absolute; top: 15px; right: 15px; margin: 0; }
         html[dir="ltr"] .modal-content.no-details .close-btn { right: auto; left: 15px; }
         .modal-content.no-details .modal-left { width: 100%; flex-grow: 1; padding: 20px 0; overflow-y: auto; height: auto; min-height: 300px; }
@@ -130,7 +110,6 @@
         .modal-content.no-details .modal-left img { max-width: 60%; max-height: 60vh; object-fit: contain; box-shadow: 0 0 15px rgba(255,255,255,0.15); }
         .modal-content.no-details .stats-table, .modal-content.no-details #modal-desc { display: none !important; }
 
-        /* General Modal Elements */
         .close-btn { align-self: flex-end; font-size: 28px; cursor: pointer; color: #aaa; margin-left: 0; margin-right: auto; border: none; background: none; z-index: 10;}
         .modal-title { font-size: 2em; color: var(--primary); margin-top: 0; margin-bottom: 10px; word-wrap: break-word; }
         .modal-subtitle { font-size: 1.2em; color: #666; margin-bottom: 20px; padding-bottom: 10px;}
@@ -141,7 +120,6 @@
         footer { margin-top: 50px; text-align: center; font-size: 0.9em; color: #666; }
         footer a { color: var(--primary); text-decoration: none; font-weight: bold; }
         
-        /* 3. MOBILE VIEW FIXES */
         @media (max-width: 900px) {
             .lang-btn { position: static; margin-bottom: 15px; align-self: center; }
             body[dir="ltr"] .lang-btn { align-self: center; }
@@ -150,27 +128,18 @@
             .controls { gap: 10px; padding: 0 10px; }
             .controls button, .jump-select { width: 200px; max-width: 90%; min-width: auto; text-align: center; }
             
-            .modal-content, .modal-content.no-details { 
-                flex-direction: column !important; margin: 5% auto; height: auto; max-height: 90vh; overflow-y: auto; overflow-x: hidden; background-color: #fefefe; width: 90%;
-            }
+            .modal-content, .modal-content.no-details { flex-direction: column !important; margin: 5% auto; height: auto; max-height: 90vh; overflow-y: auto; overflow-x: hidden; background-color: #fefefe; width: 90%; }
             .modal-left, .modal-right { width: 100% !important; height: auto !important; flex: none; background-color: transparent; }
 
-            .modal-right {
-                order: 1 !important; background-color: #fefefe; border-bottom: 1px solid #ddd; text-align: center !important; padding: 20px; display: flex; flex-direction: column; align-items: center;
-            }
+            .modal-right { order: 1 !important; background-color: #fefefe; border-bottom: 1px solid #ddd; text-align: center !important; padding: 20px; display: flex; flex-direction: column; align-items: center; }
             html[dir="ltr"] .modal-right { text-align: center !important; }
             .stats-key, .stats-table td { text-align: center !important; } 
 
-            .modal-left {
-                order: 2 !important; background-color: #000; padding: 20px 0; display: flex; flex-direction: column; align-items: center !important; text-align: center !important;
-            }
+            .modal-left { order: 2 !important; background-color: #000; padding: 20px 0; display: flex; flex-direction: column; align-items: center !important; text-align: center !important; }
             .modal-content.no-details .modal-left { display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; }
 
             .modal-image-wrapper { padding-bottom: 20px; margin-bottom: 20px; width: 100%; display: flex; justify-content: center; align-items: center; }
-
-            .modal-left img, .modal-content.no-details .modal-left img {
-                width: auto !important; max-width: 85vw !important; height: auto; max-height: 40vh !important; object-fit: contain; margin: 0 auto !important; display: block;
-            }
+            .modal-left img, .modal-content.no-details .modal-left img { width: auto !important; max-width: 85vw !important; height: auto; max-height: 40vh !important; object-fit: contain; margin: 0 auto !important; display: block; }
             
             .close-btn { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.8); padding: 0 10px; border-radius: 5px; margin: 0; }
             html[dir="ltr"] .close-btn { left: auto; right: 10px; }
@@ -242,6 +211,9 @@
     let urlCat = urlParams.get('category') || 'circulation';
     const catMap = { 'circulation': 'מחזור', 'sets': 'סטים לאספנים' };
     let currentCategory = catMap[urlCat] || 'מחזור';
+    
+    // NEW: Track the current view mode from the URL on load
+    let currentView = urlParams.get('view') || 'year';
 
     Promise.all([
         fetch('/api/data').then(res => res.json()),
@@ -251,7 +223,7 @@
         sortConfig = data.config || {};
         translationMap = translations;
         updateState(false);
-        checkHashAndOpen();
+        checkUrlAndOpen();
     });
 
     function updateState(pushHistory = true) {
@@ -283,21 +255,20 @@
         document.getElementById('btn-cat-circ').textContent = getTrans('מחזור');
         document.getElementById('btn-cat-sets').textContent = getTrans('סטים לאספנים');
         
-        // Manual translation for placeholder (No getTrans dependency)
         document.getElementById('jump-default').textContent = (currentLang === 'he') ? 'קפוץ ל...' : 'Jump to...';
 
         if (pushHistory) {
             const url = new URL(window.location);
             url.searchParams.set('lang', currentLang);
             url.searchParams.set('category', catKey);
+            url.searchParams.set('view', isSets ? 'sets' : currentView); // Save view to URL
             window.history.pushState({}, '', url);
         }
 
         if (isSets) {
-            setView('sets');
+            setView('sets', false);
         } else {
-            const activeMode = document.getElementById('btn-year').classList.contains('active') ? 'year' : 'coin';
-            setView(activeMode);
+            setView(currentView, false); // Load the view specified in the URL
         }
     }
 
@@ -311,6 +282,7 @@
         if (currentCategory === 'מחזור') {
             document.getElementById('btn-year').classList.add('active');
             document.getElementById('btn-coin').classList.remove('active');
+            currentView = 'year'; // Reset to default when switching back to circulation
         }
         updateState();
     }
@@ -338,21 +310,36 @@
         return slug.replace(/\s+/g, '-').replace(/[()]/g, '');
     }
 
-    function checkHashAndOpen() {
-        const hash = decodeURIComponent(window.location.hash.substring(1));
-        if (hash) {
-            const targetCoin = allCoins.find(c => getCoinSlug(c) === hash);
+    function checkUrlAndOpen() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const coinSlug = urlParams.get('coin');
+        
+        if (coinSlug) {
+            const targetCoin = allCoins.find(c => getCoinSlug(c) === coinSlug);
             if (targetCoin) {
                 const coinDataStr = encodeURIComponent(JSON.stringify(targetCoin));
                 openModal(coinDataStr, false); 
             }
         } else {
             closeModal(false);
+            
+            // Check if there is a hash to scroll to
+            if (window.location.hash) {
+                setTimeout(() => {
+                    // Browsers encode Hebrew characters in URLs (e.g. %D7%90)
+                    // We must decode it back to match the element ID in the HTML
+                    const targetId = decodeURIComponent(window.location.hash.substring(1));
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 300); // Give layout slightly more time to settle before scrolling
+            }
         }
     }
-    window.addEventListener('hashchange', checkHashAndOpen);
+    window.addEventListener('popstate', checkUrlAndOpen); 
 
-    // Helpers
     function extractYear(str) {
         if (!str) return 9999;
         const match = str.toString().match(/(\d{4})/);
@@ -402,11 +389,20 @@
         const element = document.getElementById(id);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Push hash to URL directly to make it shareable
+            const url = new URL(window.location);
+            url.hash = id;
+            window.history.pushState({}, '', url);
+            
             document.getElementById('jump-select').selectedIndex = 0;
         }
     }
 
-    function setView(mode) {
+    // NEW: Set view mode now explicitly accepts an updateUrl parameter
+    function setView(mode, updateUrl = true) {
+        currentView = mode; // Save the selected view state
+        
         const btnYear = document.getElementById('btn-year');
         const btnCoin = document.getElementById('btn-coin');
         if (mode === 'sets') {
@@ -416,6 +412,12 @@
             btnCoin.className = mode === 'coin' ? 'active' : '';
             btnYear.setAttribute('aria-pressed', mode === 'year');
             btnCoin.setAttribute('aria-pressed', mode === 'coin');
+        }
+        
+        if (updateUrl && mode !== 'sets') {
+            const url = new URL(window.location);
+            url.searchParams.set('view', mode);
+            window.history.pushState({}, '', url);
         }
 
         const gallery = document.getElementById('gallery');
@@ -457,23 +459,19 @@
             }
         });
 
-        // PREPARE TRANSLATED JUMP OPTIONS
         const jumpItems = [];
-
         let lastSeriesName = null;
 
         keys.forEach(key => {
             const sectionId = 'section-' + key.replace(/\s+/g, '-').replace(/[()]/g, '');
-            const coinObj = grouped[key][0]; // Representative coin
+            const coinObj = grouped[key][0]; 
             
-            // CALCULATE DISPLAY LABEL (TRANSLATED)
             let displayLabel = key;
             if (mode === 'year') {
-                displayLabel = key; // Year stays numbers
+                displayLabel = key; 
             } else if (mode === 'sets') {
                 displayLabel = getTrans(coinObj.series);
             } else {
-                // Coin Mode: "Name (Series)"
                 displayLabel = getTrans(coinObj.name) + ' (' + getTrans(coinObj.series) + ')';
             }
             
@@ -553,7 +551,6 @@
                 section.className = 'group-section';
                 
                 if (mode !== 'sets') {
-                    // Coin Mode Header
                     section.innerHTML = `<div class="group-header" id="${sectionId}"><h2 class="group-title">${getTrans(coinObj.name)}</h2></div>`;
                 } else {
                     section.id = sectionId;
@@ -567,7 +564,6 @@
         updateJumpSelect(jumpItems);
     }
 
-    // ... rest of render functions identical to previous step ...
     function renderRow(container, coins, mode) {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'coin-type-row';
@@ -654,7 +650,8 @@
         if (updateUrl) {
             const slug = getCoinSlug(coin);
             const url = new URL(window.location);
-            url.hash = slug;
+            url.searchParams.set('coin', slug); // Use query string instead of hash
+            url.hash = ''; // Clear hash just in case
             window.history.pushState({}, '', url);
         }
 
@@ -734,7 +731,7 @@
         document.body.style.overflow = 'auto';
         if (updateUrl) {
             const url = new URL(window.location);
-            url.hash = '';
+            url.searchParams.delete('coin'); // Clear query string
             window.history.pushState({}, '', url);
         }
         if (lastFocusedElement) lastFocusedElement.focus();

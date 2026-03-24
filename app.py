@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, render_template, send_from_directory, jsonify
+from flask import Flask, render_template, send_from_directory, jsonify, request
 
 app = Flask(__name__)
 
@@ -148,7 +148,52 @@ def process_coin_item(collection, category_name, series_dir_name, year, coin_nam
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # 1. Grab the 'coin' parameter from the URL
+    shared_coin_slug = request.args.get('coin')
+    
+    # 2. Default Open Graph Tags
+    og_title = "ארכיון המטבעות הישראלי"
+    og_desc = "קטלוג דיגיטלי מקיף של מטבעות ישראל"
+    og_image = request.url_root + "static/favicon.svg" 
+    
+    if shared_coin_slug:
+        # 3. We scan the collection just like the API does to find the matching coin
+        all_coins = scan_collection()
+        
+        for coin in all_coins:
+            name_he = coin.get('name', {}).get('he', '')
+            series_he = coin.get('series', {}).get('he', '')
+            subtype_he = coin.get('subtype', {}).get('he', '') if coin.get('subtype') else ""
+            year = coin.get('year', '')
+            
+            # Replicate frontend slug logic exactly
+            slug = f"{year}_{name_he}_{series_he}"
+            if subtype_he and subtype_he != 'ללא תיוג':
+                slug += f"_{subtype_he}"
+            
+            # Clean up slug
+            slug = slug.replace(" ", "-").replace("(", "").replace(")", "")
+            
+            if slug == shared_coin_slug:
+                og_title = f"{name_he} - {year} | {series_he}"
+                
+                if coin.get('has_image') and coin.get('images'):
+                    # Prefer thumbnail if available, otherwise use full image
+                    img_path = coin.get('thumb_src') if coin.get('thumb_available') else coin['images'][0]
+                    folder = "thumbnails" if coin.get('thumb_available') else "images"
+                    
+                    # WhatsApp requires absolute URLs for images
+                    og_image = request.url_root + f"{folder}/{img_path}"
+                    
+                break # Stop searching once found
+
+    # 4. Render the template with the dynamic tags
+    return render_template(
+        'index.html', 
+        og_title=og_title, 
+        og_desc=og_desc, 
+        og_image=og_image
+    )
 
 @app.route('/about')
 def about():

@@ -1,5 +1,7 @@
 import os
 import json
+import re
+from urllib.parse import quote
 from flask import Flask, render_template, send_from_directory, jsonify, request
 
 app = Flask(__name__)
@@ -32,8 +34,6 @@ def get_json_data(path):
         except Exception:
             return {}
     return {}
-    
-    
     
 def scan_collection():
     collection = []
@@ -151,13 +151,13 @@ def index():
     # 1. Grab the 'coin' parameter from the URL
     shared_coin_slug = request.args.get('coin')
     
-    # 2. Default Open Graph Tags
+    # 2. Default Open Graph Tags (IMPORTANT: change favicon.svg to a png/jpg if you want a default fallback, SVG doesn't work for OG)
     og_title = "ארכיון המטבעות הישראלי"
     og_desc = "קטלוג דיגיטלי מקיף של מטבעות ישראל"
     og_image = request.url_root + "static/favicon.svg" 
     
     if shared_coin_slug:
-        # 3. We scan the collection just like the API does to find the matching coin
+        # 3. Scan collection
         all_coins = scan_collection()
         
         for coin in all_coins:
@@ -171,19 +171,22 @@ def index():
             if subtype_he and subtype_he != 'ללא תיוג':
                 slug += f"_{subtype_he}"
             
-            # Clean up slug
-            slug = slug.replace(" ", "-").replace("(", "").replace(")", "")
+            # Clean up slug - using regex to handle multiple spaces just like JS replace(/\s+/g, '-')
+            slug = re.sub(r'\s+', '-', slug)
+            slug = slug.replace("(", "").replace(")", "")
             
             if slug == shared_coin_slug:
                 og_title = f"{name_he} - {year} | {series_he}"
                 
                 if coin.get('has_image') and coin.get('images'):
-                    # Prefer thumbnail if available, otherwise use full image
                     img_path = coin.get('thumb_src') if coin.get('thumb_available') else coin['images'][0]
                     folder = "thumbnails" if coin.get('thumb_available') else "images"
                     
-                    # WhatsApp requires absolute URLs for images
-                    og_image = request.url_root + f"{folder}/{img_path}"
+                    # URL ENCODING IS CRITICAL HERE FOR WHATSAPP/FACEBOOK
+                    full_relative_path = f"{folder}/{img_path}"
+                    safe_url_path = quote(full_relative_path)
+                    
+                    og_image = request.url_root + safe_url_path
                     
                 break # Stop searching once found
 
@@ -197,9 +200,6 @@ def index():
 
 @app.route('/about')
 def about():
-    # Note: You might want to update about.json logic if it moves, but for now we leave it
-    # We assume about.json is still directly in 'images' or moved to 'images/מחזור'
-    # For safety, put about.json in the root 'images' folder alongside the two new folders.
     data = get_json_data(os.path.join(IMAGE_FOLDER, 'about.json'))
     return render_template('about.html', data=data)
 

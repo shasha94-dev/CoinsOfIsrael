@@ -198,10 +198,65 @@ def index():
         og_image=og_image
     )
 
+#TODO remove
+@app.route('/index2')
+def index():
+    # 1. Grab the 'coin' parameter from the URL
+    shared_coin_slug = request.args.get('coin')
+    
+    # 2. Default Open Graph Tags (IMPORTANT: change favicon.svg to a png/jpg if you want a default fallback, SVG doesn't work for OG)
+    og_title = "ארכיון המטבעות הישראלי"
+    og_desc = "קטלוג דיגיטלי מקיף של מטבעות ישראל"
+    og_image = request.url_root + "static/favicon.svg" 
+    
+    if shared_coin_slug:
+        # 3. Scan collection
+        all_coins = scan_collection()
+        
+        for coin in all_coins:
+            name_he = coin.get('name', {}).get('he', '')
+            series_he = coin.get('series', {}).get('he', '')
+            subtype_he = coin.get('subtype', {}).get('he', '') if coin.get('subtype') else ""
+            year = coin.get('year', '')
+            
+            # Replicate frontend slug logic exactly
+            slug = f"{year}_{name_he}_{series_he}"
+            if subtype_he and subtype_he != 'ללא תיוג':
+                slug += f"_{subtype_he}"
+            
+            # Clean up slug - using regex to handle multiple spaces just like JS replace(/\s+/g, '-')
+            slug = re.sub(r'\s+', '-', slug)
+            slug = slug.replace("(", "").replace(")", "")
+            
+            if slug == shared_coin_slug:
+                og_title = f"{name_he} - {year} | {series_he}"
+                
+                if coin.get('has_image') and coin.get('images'):
+                    img_path = coin.get('thumb_src') if coin.get('thumb_available') else coin['images'][0]
+                    folder = "thumbnails" if coin.get('thumb_available') else "images"
+                    
+                    # URL ENCODING IS CRITICAL HERE FOR WHATSAPP/FACEBOOK
+                    full_relative_path = f"{folder}/{img_path}"
+                    safe_url_path = quote(full_relative_path)
+                    
+                    og_image = request.url_root + safe_url_path
+                    
+                break # Stop searching once found
+
+    # 4. Render the template with the dynamic tags
+    return render_template(
+        'index2.html', 
+        og_title=og_title, 
+        og_desc=og_desc, 
+        og_image=og_image
+    )
+
+
 @app.route('/about')
 def about():
     data = get_json_data(os.path.join(IMAGE_FOLDER, 'about.json'))
     return render_template('about.html', data=data)
+
 
 @app.route('/accessibility')
 def accessibility():

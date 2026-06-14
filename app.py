@@ -200,7 +200,7 @@ def index():
 
 #TODO remove
 @app.route('/index2')
-def index():
+def index2():
     # 1. Grab the 'coin' parameter from the URL
     shared_coin_slug = request.args.get('coin')
     

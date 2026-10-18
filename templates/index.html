@@ -398,8 +398,7 @@
             document.getElementById('jump-select').selectedIndex = 0;
         }
     }
-
-    // NEW: Set view mode now explicitly accepts an updateUrl parameter
+// NEW: Set view mode now explicitly accepts an updateUrl parameter
     function setView(mode, updateUrl = true) {
         currentView = mode; // Save the selected view state
         
@@ -522,6 +521,17 @@
                     let simpleCoinsBuffer = [];
                     coinTypeKeys.forEach(cType => {
                         const coinsOfType = byCoinType[cType];
+                        
+                        // NEW: Sort variants (Untagged first, then alphabetical)
+                        coinsOfType.sort((a, b) => {
+                            const subA = getCanonical(a.subtype) || "ללא תיוג";
+                            const subB = getCanonical(b.subtype) || "ללא תיוג";
+                            if (subA === subB) return 0;
+                            if (subA === "ללא תיוג") return -1;
+                            if (subB === "ללא תיוג") return 1;
+                            return subA.localeCompare(subB, 'he');
+                        });
+
                         if (coinsOfType.length > 1) {
                             if (simpleCoinsBuffer.length > 0) {
                                 renderRow(section, simpleCoinsBuffer, mode);
@@ -537,7 +547,19 @@
                 gallery.appendChild(section);
             } else {
                 let coinList = grouped[key];
-                coinList.sort((a,b) => extractYear(a.year) - extractYear(b.year));
+                
+                // NEW: Sort by Year, then by Variant (Untagged first, then alphabetical)
+                coinList.sort((a,b) => {
+                    const yearDiff = extractYear(a.year) - extractYear(b.year);
+                    if (yearDiff !== 0) return yearDiff;
+                    
+                    const subA = getCanonical(a.subtype) || "ללא תיוג";
+                    const subB = getCanonical(b.subtype) || "ללא תיוג";
+                    if (subA === subB) return 0;
+                    if (subA === "ללא תיוג") return -1;
+                    if (subB === "ללא תיוג") return 1;
+                    return subA.localeCompare(subB, 'he');
+                });
 
                 const currentSeriesCanonical = getCanonical(coinObj.series);
                 
@@ -563,7 +585,7 @@
         
         updateJumpSelect(jumpItems);
     }
-
+    
     function renderRow(container, coins, mode) {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'coin-type-row';
